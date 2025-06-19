@@ -1,10 +1,13 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
+import GameBoard from "./src/components/GameBoard";
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
+      <View style={styles.gameBoard}>
+        <GameBoard />
+      </View>
       <StatusBar style="auto" />
     </View>
   );
@@ -16,5 +19,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
+  },
+  gameBoard: {
+    width: 300,
+    height: 300,
+    overflow: "hidden",
   },
 });

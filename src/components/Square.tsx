@@ -1,4 +1,4 @@
-import React from "react";
+import { memo, FC, useMemo } from "react";
 import { TouchableOpacity, Text, ViewStyle, TextStyle } from "react-native";
 import { StyleSheet } from "react-native";
 
@@ -12,13 +12,19 @@ interface SquareProps {
 
 const styles = StyleSheet.create({
   square: {
-    width: 80,
-    height: 80,
-    borderWidth: 2,
-    borderColor: "#000000",
+    flex: 1,
+    borderColor: "#fff000",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#ffffff",
+    backgroundColor: "green",
+  },
+  horizontalBorder: {
+    borderBottomWidth: 2,
+    borderTopWidth: 2,
+  },
+  verticalBorder: {
+    borderLeftWidth: 2,
+    borderRightWidth: 2,
   },
   residentText: {
     fontSize: 32,
@@ -27,16 +33,20 @@ const styles = StyleSheet.create({
   },
 });
 
-const Square: React.FC<SquareProps> = ({ position, onPress, resident }) => {
-  return (
-    <TouchableOpacity
-      style={styles.square}
-      onPress={onPress}
-      activeOpacity={0.7}
-    >
-      {resident && <Text style={styles.residentText}>{resident}</Text>}
-    </TouchableOpacity>
-  );
-};
+export const Square: FC<SquareProps> = memo(
+  ({ position, onPress, resident }) => {
+    const style = useMemo(() => {
+      return {
+        ...styles.square,
+        ...(position[0] === 1 && styles.horizontalBorder),
+        ...(position[1] === 1 && styles.verticalBorder),
+      };
+    }, [position]);
 
-export default Square;
+    return (
+      <TouchableOpacity style={style} onPress={onPress} activeOpacity={0.7}>
+        {resident && <Text style={styles.residentText}>{resident}</Text>}
+      </TouchableOpacity>
+    );
+  }
+);
