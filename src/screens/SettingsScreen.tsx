@@ -133,19 +133,6 @@ export const SettingsScreen = memo(({ navigation }: NavigationProps) => {
               />
             </Card>
           </Box>
-
-          {/* About Section */}
-          <Box>
-            <Text variant="title" marginBottom="l">
-              About
-            </Text>
-            <Card>
-              <Text variant="bodySecondary" lineHeight={24}>
-                TicTacToe is a classic strategy game with modern theming
-                support. Choose your preferred appearance and enjoy the game!
-              </Text>
-            </Card>
-          </Box>
         </Box>
       </Box>
     </ScrollView>
