@@ -1,9 +1,10 @@
 import { memo, useEffect, useMemo } from "react";
 import { View } from "react-native";
 import { Square } from "./Square";
-import { BoardState, HandleSquarePress } from "../hooks/useGameState";
+import { HandleSquarePress } from "../hooks/useGameState";
+import { BoardState } from "../hooks/useBoardState";
 
-const GameBoard = memo(
+export const GameBoard = memo(
   ({
     boardState,
     handleSquarePress,
@@ -47,5 +48,3 @@ const GameBoard = memo(
     return <View style={{ flex: 1 }}>{rows}</View>;
   }
 );
-
-export default GameBoard;

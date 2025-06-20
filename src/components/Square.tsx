@@ -1,10 +1,11 @@
-import { memo, FC, useMemo, useCallback, useEffect } from "react";
+import { memo, FC, useMemo, useCallback } from "react";
 import { Text, TouchableHighlight, View } from "react-native";
 import { StyleSheet } from "react-native";
-import { HandleSquarePress, Marker } from "../hooks/useGameState";
+import { HandleSquarePress } from "../hooks/useGameState";
+import { Marker, Position } from "../hooks/useBoardState";
 
 interface SquareProps {
-  position: [0 | 1 | 2, 0 | 1 | 2];
+  position: Position;
   onPress: HandleSquarePress;
   resident: Marker | null;
 }

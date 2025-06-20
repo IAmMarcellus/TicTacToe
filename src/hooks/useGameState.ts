@@ -1,44 +1,45 @@
 import { useCallback, useEffect, useState } from "react";
-
-export enum Marker {
-  X = "X",
-  O = "O",
-}
-
-export type SquareState = Marker | null;
-export type BoardState = SquareState[][];
+import { Marker, Position, useBoardState } from "./useBoardState";
+import { useCpuPlayer } from "./useCpuPlayer";
 
 export type HandleSquarePress = (row: number, col: number) => void;
 
-const useGameState = () => {
-  // Create a 3x3 board with null values
-  const [boardState, setBoardState] = useState<BoardState>(
-    Array(3)
-      .fill(null)
-      .map(() => Array(3).fill(null))
-  );
+export const useGameState = () => {
+  const { boardState, updateBoard, resetBoard, checkForWin } = useBoardState();
+
   // X goes first
   const [currentPlayer, setCurrentPlayer] = useState<Marker>(Marker.X);
 
   const handleSquarePress: HandleSquarePress = useCallback(
     (row, col) => {
-      // Immutably update the board with the current player's marker
-      const newBoard = boardState.slice();
-      newBoard[row][col] = currentPlayer;
-      setBoardState(newBoard);
+      // If the square is already filled, do nothing
+      if (boardState[row][col] !== null) {
+        return;
+      }
+
+      updateBoard(row, col, currentPlayer);
+      const didWin = checkForWin([row, col] as Position);
+      if (didWin) {
+        // TODO: handle winning state for the current player
+        return;
+      }
       setCurrentPlayer(currentPlayer === Marker.X ? Marker.O : Marker.X);
     },
     [boardState, currentPlayer]
   );
 
   const resetGame = useCallback(() => {
-    setBoardState(
-      Array(3)
-        .fill(null)
-        .map(() => Array(3).fill(null))
-    );
+    resetBoard();
     setCurrentPlayer(Marker.X);
   }, []);
+
+  const { makeMove } = useCpuPlayer(boardState, handleSquarePress);
+
+  useEffect(() => {
+    if (currentPlayer === Marker.O) {
+      makeMove();
+    }
+  }, [currentPlayer, makeMove]);
 
   return {
     boardState,
@@ -47,5 +48,3 @@ const useGameState = () => {
     resetGame,
   };
 };
-
-export default useGameState;

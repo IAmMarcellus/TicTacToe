@@ -1,14 +1,15 @@
 import { Button, StyleSheet, View } from "react-native";
-import GameBoard from "../components/GameBoard";
-import useGameState from "../hooks/useGameState";
+import { GameBoard } from "../components/GameBoard";
+import { useGameState } from "../hooks/useGameState";
 import { memo } from "react";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: "space-evenly",
     alignItems: "center",
     paddingHorizontal: 40,
+    paddingVertical: 20,
   },
   gameBoard: {
     aspectRatio: 1,
