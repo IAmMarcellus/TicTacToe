@@ -41,6 +41,7 @@ export const SettingsScreen = memo(({ navigation }: NavigationProps) => {
 
   const contentContainerStyle = useMemo(
     () => ({
+      paddingBottom: 40,
       backgroundColor: isDark ? "#121212" : "#FFFFFF",
     }),
     [isDark]
@@ -103,12 +104,8 @@ export const SettingsScreen = memo(({ navigation }: NavigationProps) => {
               Game Statistics
             </Text>
 
-            <Card>
-              <Box
-                flexDirection="row"
-                justifyContent="space-around"
-                marginBottom="l"
-              >
+            <Card gap="l">
+              <Box flexDirection="row" justifyContent="space-around">
                 <StatCard value={stats.wins} label="Wins" color="success" />
                 <StatCard
                   value={stats.losses}
@@ -119,7 +116,7 @@ export const SettingsScreen = memo(({ navigation }: NavigationProps) => {
               </Box>
 
               {/* Summary */}
-              <SummaryCard>
+              <SummaryCard marginBottom="l">
                 <SummaryRow label="Total Games" value={totalGames} />
                 <SummaryRow
                   label="Win Rate"

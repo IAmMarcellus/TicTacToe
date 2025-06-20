@@ -28,7 +28,7 @@ export const SelectionCard: React.FC<SelectionCardProps> = ({
         paddingHorizontal="l"
         borderRadius="m"
         backgroundColor={isSelected ? "primary" : "cardPrimaryBackground"}
-        opacity={isSelected ? 0.1 : 1}
+        opacity={isSelected ? 0.9 : 1}
         marginBottom={marginBottom}
       >
         {icon && (

@@ -54,7 +54,7 @@ This will open the Expo development tools. You can then:
 - TypeScript
 - React Navigation
 - Restyle (theming)
-- AsyncStorage (game persistence)
+- AsyncStorage (stats persistence)
 
 ## 📱 Screenshots
 

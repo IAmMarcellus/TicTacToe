@@ -7,7 +7,6 @@ import { HomeScreen } from "../screens/HomeScreen";
 import { GameScreen } from "../screens/GameScreen";
 import { SettingsScreen } from "../screens/SettingsScreen";
 import { useTheme } from "../hooks/useTheme";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 const Stack = createStackNavigator();
 
@@ -41,39 +40,34 @@ export function Navigator() {
 
   return (
     <NavigationContainer>
-      <SafeAreaView
-        style={styles.safeAreaView}
-        edges={["left", "right", "bottom"]}
-      >
-        <Stack.Navigator initialRouteName="Home" screenOptions={screenOptions}>
-          <Stack.Screen
-            name="Home"
-            component={HomeScreen}
-            options={{
-              title: "Tic Tac Toe",
-              headerShown: false,
-              animation: "slide_from_left",
-            }}
-          />
-          <Stack.Screen
-            name="Game"
-            component={GameScreen}
-            options={{
-              title: "Game",
-              headerShown: false,
-              animation: "slide_from_right",
-            }}
-          />
-          <Stack.Screen
-            name="Settings"
-            component={SettingsScreen}
-            options={{
-              title: "Settings",
-              headerShown: false,
-            }}
-          />
-        </Stack.Navigator>
-      </SafeAreaView>
+      <Stack.Navigator initialRouteName="Home" screenOptions={screenOptions}>
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{
+            title: "Tic Tac Toe",
+            headerShown: false,
+            animation: "slide_from_left",
+          }}
+        />
+        <Stack.Screen
+          name="Game"
+          component={GameScreen}
+          options={{
+            title: "Game",
+            headerShown: false,
+            animation: "slide_from_right",
+          }}
+        />
+        <Stack.Screen
+          name="Settings"
+          component={SettingsScreen}
+          options={{
+            title: "Settings",
+            headerShown: false,
+          }}
+        />
+      </Stack.Navigator>
       <StatusBar style={isDark ? "light" : "dark"} />
     </NavigationContainer>
   );
