@@ -26,7 +26,12 @@ const SummaryRow: React.FC<SummaryRowProps> = ({
   };
 
   return (
-    <Box flexDirection="row" justifyContent="space-between" marginBottom="xs">
+    <Box
+      flexDirection="row"
+      justifyContent="space-between"
+      marginBottom="xs"
+      gap="s"
+    >
       <Text variant="body" color="secondaryText">
         {label}:
       </Text>

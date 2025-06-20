@@ -2,39 +2,48 @@ import { GameBoard } from "../components/GameBoard";
 import { GameStats } from "../components/GameStats";
 import { GameResultModal } from "../components/GameResultModal";
 import { useGameState } from "../hooks/useGameState";
-import { memo, useCallback } from "react";
+import { memo, useCallback, useMemo } from "react";
 import { NavigationProps } from "../types/navigation";
 import { Box, Text } from "../theme/ThemeProvider";
 import { ThemedButton } from "../components/ThemedButton";
-import { useTheme } from "../hooks/useTheme";
 import { Marker } from "../hooks/useBoardState";
 import { IconButton, Card } from "../components/ui";
 
 export const GameScreen = memo(({ navigation }: NavigationProps) => {
-  const { boardState, currentPlayer, gameEnded, handleSquarePress, resetGame } =
-    useGameState();
-  const { colors } = useTheme();
+  const {
+    boardState,
+    currentPlayer,
+    winningState,
+    handleSquarePress,
+    resetGame,
+  } = useGameState();
 
   const handleBackToHome = useCallback(() => {
     navigation.navigate("Home");
   }, [navigation]);
 
-  const getGameResultMessage = useCallback(() => {
-    if (!gameEnded) return "";
+  const gameResultMessage = useMemo(() => {
+    if (!winningState) return "";
 
-    const winner = boardState.flat().find((marker) => marker !== null);
-    if (winner === Marker.X) {
+    if (winningState === "win") {
       return "You Win! 🎉";
-    } else if (winner === Marker.O) {
+    } else if (winningState === "loss") {
       return "CPU Wins! 🤖";
     } else {
       return "It's a Draw! 🤝";
     }
-  }, [gameEnded, boardState]);
+  }, [winningState, boardState]);
 
   const handlePlayAgain = useCallback(() => {
     resetGame();
   }, [resetGame]);
+
+  const headerText = useMemo(() => {
+    if (winningState) {
+      return "Game Over";
+    }
+    return currentPlayer === Marker.X ? "Your turn" : "CPU thinking...";
+  }, [winningState, currentPlayer]);
 
   return (
     <Box flex={1} backgroundColor="mainBackground">
@@ -63,19 +72,16 @@ export const GameScreen = memo(({ navigation }: NavigationProps) => {
         paddingVertical="l"
         paddingTop="xxxl"
       >
-        {/* Game Status (only show during active game) */}
-        {!gameEnded && (
-          <Card>
-            <Text
-              variant="title"
-              fontSize={18}
-              color="primaryText"
-              textAlign="center"
-            >
-              {currentPlayer === Marker.X ? "Your turn" : "CPU thinking..."}
-            </Text>
-          </Card>
-        )}
+        <Card>
+          <Text
+            variant="title"
+            fontSize={18}
+            color="primaryText"
+            textAlign="center"
+          >
+            {headerText}
+          </Text>
+        </Card>
 
         {/* Game Board */}
         <Box aspectRatio={1} width="100%" overflow="hidden" marginBottom="l">
@@ -87,26 +93,12 @@ export const GameScreen = memo(({ navigation }: NavigationProps) => {
 
         {/* Game Statistics */}
         <GameStats />
-
-        {/* Reset Button */}
-        <Box
-          flexDirection="row"
-          justifyContent="space-around"
-          width="100%"
-          marginTop="l"
-        >
-          <ThemedButton
-            title="New Game"
-            onPress={resetGame}
-            variant="secondary"
-          />
-        </Box>
       </Box>
 
       {/* Game Result Modal */}
       <GameResultModal
-        visible={gameEnded}
-        message={getGameResultMessage()}
+        visible={!!winningState}
+        message={gameResultMessage}
         onPlayAgain={handlePlayAgain}
       />
     </Box>

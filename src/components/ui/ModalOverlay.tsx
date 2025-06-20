@@ -1,5 +1,5 @@
-import React, { useMemo } from "react";
-import { View, ViewStyle } from "react-native";
+import React from "react";
+import { View, ViewStyle, StyleSheet } from "react-native";
 import { Box } from "../../theme/ThemeProvider";
 
 interface ModalOverlayProps {
@@ -7,19 +7,19 @@ interface ModalOverlayProps {
   style?: ViewStyle;
 }
 
+const styles = StyleSheet.create({
+  overlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 24,
+  },
+});
+
 export const ModalOverlay: React.FC<ModalOverlayProps> = ({
   children,
   style,
 }) => {
-  const overlayStyle = useMemo((): ViewStyle => {
-    return {
-      flex: 1,
-      backgroundColor: "rgba(0, 0, 0, 0.5)",
-      justifyContent: "center",
-      alignItems: "center",
-      paddingHorizontal: 24,
-    };
-  }, []);
-
-  return <View style={[overlayStyle, style]}>{children}</View>;
+  return <View style={[styles.overlay, style]}>{children}</View>;
 };

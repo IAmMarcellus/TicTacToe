@@ -6,7 +6,6 @@ import { Card, StatCard, SummaryCard, SummaryRow } from "./ui";
 
 export const GameStats = memo(() => {
   const { stats, isLoading, totalGames, winPercentage } = useGameStats();
-  const { colors } = useTheme();
 
   if (isLoading) {
     return (
@@ -19,19 +18,19 @@ export const GameStats = memo(() => {
   }
 
   return (
-    <Card>
-      <Box
-        flexDirection="row"
-        justifyContent="space-between"
-        alignItems="center"
-        marginBottom="m"
-      >
+    <Card justifyContent="space-between" flex={1}>
+      <Box flexDirection="row" justifyContent="center">
         <Text variant="title" fontSize={18}>
           Game Statistics
         </Text>
       </Box>
 
-      <Box flexDirection="row" justifyContent="space-around" marginBottom="l">
+      <Box
+        flexDirection="row"
+        justifyContent="space-around"
+        marginBottom="m"
+        marginTop="m"
+      >
         <StatCard value={stats.wins} label="Wins" color="success" />
         <StatCard value={stats.losses} label="Losses" color="secondary" />
         <StatCard value={stats.draws} label="Draws" color="primary" />

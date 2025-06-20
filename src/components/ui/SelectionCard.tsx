@@ -19,8 +19,6 @@ export const SelectionCard: React.FC<SelectionCardProps> = ({
   marginBottom = "s",
   ...props
 }) => {
-  const { colors } = useTheme();
-
   return (
     <TouchableOpacity onPress={onPress} activeOpacity={0.7} {...props}>
       <Box
@@ -38,11 +36,11 @@ export const SelectionCard: React.FC<SelectionCardProps> = ({
             {icon}
           </Text>
         )}
-        <Text variant="body" flex={1}>
+        <Text variant="body" flex={1} color="primaryText">
           {title}
         </Text>
         {isSelected && (
-          <Text fontSize={16} color="primary">
+          <Text fontSize={16} color="primaryText">
             ✓
           </Text>
         )}

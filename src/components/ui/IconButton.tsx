@@ -3,6 +3,7 @@ import {
   TouchableOpacity,
   TouchableOpacityProps,
   ViewStyle,
+  StyleSheet,
 } from "react-native";
 import { Box, Text } from "../../theme/ThemeProvider";
 import { useTheme } from "../../hooks/useTheme";
@@ -14,6 +15,13 @@ interface IconButtonProps extends TouchableOpacityProps {
   variant?: "default" | "outlined" | "filled";
   onPress: () => void;
 }
+
+const styles = StyleSheet.create({
+  buttonContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+});
 
 export const IconButton: React.FC<IconButtonProps> = ({
   icon,
@@ -82,10 +90,6 @@ export const IconButton: React.FC<IconButtonProps> = ({
     }
   }, [size]);
 
-  const buttonContainerStyle = useMemo((): ViewStyle => {
-    return { flexDirection: "row", alignItems: "center" };
-  }, []);
-
   const iconContainerStyle = useMemo(() => {
     return [sizeStyles, variantStyles];
   }, [sizeStyles, variantStyles]);
@@ -94,7 +98,7 @@ export const IconButton: React.FC<IconButtonProps> = ({
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.7}
-      style={[buttonContainerStyle, style]}
+      style={[styles.buttonContainer, style]}
       {...props}
     >
       <Box

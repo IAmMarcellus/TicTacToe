@@ -1,5 +1,5 @@
 import { memo, useCallback, useMemo } from "react";
-import { ScrollView, ViewStyle } from "react-native";
+import { ScrollView, ViewStyle, StyleSheet } from "react-native";
 import { Box, Text } from "../theme/ThemeProvider";
 import { NavigationProps } from "../types/navigation";
 import { useTheme, ThemeMode } from "../hooks/useTheme";
@@ -14,13 +14,15 @@ import {
 } from "../components/ui";
 import { ThemedButton } from "../components/ThemedButton";
 
+const styles = StyleSheet.create({
+  scrollView: {
+    flex: 1,
+  },
+});
+
 export const SettingsScreen = memo(({ navigation }: NavigationProps) => {
   const { themeMode, setThemeMode, isDark } = useTheme();
   const { stats, resetStats, totalGames, winPercentage } = useGameStats();
-
-  const scrollViewStyle = useMemo((): ViewStyle => {
-    return { flex: 1 };
-  }, []);
 
   const handleBackToHome = useCallback(() => {
     navigation.navigate("Home");
@@ -37,8 +39,20 @@ export const SettingsScreen = memo(({ navigation }: NavigationProps) => {
     await resetStats();
   }, [resetStats]);
 
+  const contentContainerStyle = useMemo(
+    () => ({
+      backgroundColor: isDark ? "#121212" : "#FFFFFF",
+    }),
+    [isDark]
+  );
+
   return (
-    <ScrollView style={scrollViewStyle}>
+    <ScrollView
+      style={styles.scrollView}
+      contentContainerStyle={contentContainerStyle}
+      bounces={false}
+      showsVerticalScrollIndicator={false}
+    >
       <Box flex={1} backgroundColor="mainBackground">
         {/* Header */}
         <Header title="Settings" leftIcon="←" onLeftPress={handleBackToHome} />
