@@ -1,13 +1,12 @@
 import { Box, ThemeProvider } from "./src/theme/ThemeProvider";
 import { Navigator } from "./src/navigation/Navigator";
-import { SafeAreaView, View } from "react-native";
 
 export default function App() {
   return (
     <ThemeProvider>
-      <View style={{ flex: 1, backgroundColor: "blue" }}>
+      <Box flex={1} backgroundColor="mainBackground">
         <Navigator />
-      </View>
+      </Box>
     </ThemeProvider>
   );
 }

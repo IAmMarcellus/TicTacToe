@@ -4,6 +4,8 @@ import { Square } from "./Square";
 import { HandleSquarePress } from "../hooks/useGameState";
 import { BoardState } from "../hooks/useBoardState";
 
+const PLACES = [0, 1, 2] as const;
+
 export const GameBoard = memo(
   ({
     boardState,
@@ -12,11 +14,10 @@ export const GameBoard = memo(
     boardState: BoardState;
     handleSquarePress: HandleSquarePress;
   }) => {
-    const places = [0, 1, 2] as const;
     const squares = useMemo(
       () =>
-        places.map((row) => {
-          return places.map((column) => {
+        PLACES.map((row) => {
+          return PLACES.map((column) => {
             return (
               <Square
                 key={`${row}-${column}`}
@@ -29,6 +30,7 @@ export const GameBoard = memo(
         }),
       [boardState, handleSquarePress]
     );
+
     const rows = useMemo(() => {
       return squares.map((row, index) => {
         return (

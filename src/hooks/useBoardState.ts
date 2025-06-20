@@ -11,7 +11,11 @@ export type Position = [PositionNumber, PositionNumber];
 export type SquareState = Marker | null;
 export type BoardState = SquareState[][];
 
-export type UpdateBoard = (row: number, col: number, player: Marker) => void;
+export type UpdateBoard = (
+  row: number,
+  col: number,
+  player: Marker
+) => BoardState;
 
 export const useBoardState = () => {
   // Create a 3x3 board with null values
@@ -25,10 +29,18 @@ export const useBoardState = () => {
 
   const updateBoard: UpdateBoard = useCallback(
     (row, col, player) => {
-      // Immutably update the board with the current player's marker
-      const newBoard = boardState.slice();
-      newBoard[row][col] = player;
+      // Calculate the new board state
+      const newBoard = boardState.map((boardRow, rowIndex) =>
+        rowIndex === row
+          ? boardRow.map((cell, colIndex) => (colIndex === col ? player : cell))
+          : [...boardRow]
+      );
+
+      // Update the state
       setBoardState(newBoard);
+
+      // Return the new board for immediate use
+      return newBoard;
     },
     [boardState]
   );
@@ -44,22 +56,22 @@ export const useBoardState = () => {
   /* -- Read Functions -- */
 
   const checkForWin = useCallback(
-    (position: Position) => {
+    (position: Position, board: BoardState = boardState) => {
       const [row, col] = position;
       //Check row
       if (
-        boardState[row][0] === boardState[row][1] &&
-        boardState[row][1] === boardState[row][2] &&
-        boardState[row][0] !== null
+        board[row][0] === board[row][1] &&
+        board[row][1] === board[row][2] &&
+        board[row][0] !== null
       ) {
         return true;
       }
 
       // Check column
       if (
-        boardState[0][col] === boardState[1][col] &&
-        boardState[1][col] === boardState[2][col] &&
-        boardState[0][col] !== null
+        board[0][col] === board[1][col] &&
+        board[1][col] === board[2][col] &&
+        board[0][col] !== null
       ) {
         return true;
       }
@@ -68,18 +80,18 @@ export const useBoardState = () => {
       const isMiddle = row === 1 && col === 1;
       if ((row === 0 && col === 0) || (row === 2 && col === 2) || isMiddle) {
         if (
-          boardState[0][0] === boardState[1][1] &&
-          boardState[1][1] === boardState[2][2] &&
-          boardState[0][0] !== null
+          board[0][0] === board[1][1] &&
+          board[1][1] === board[2][2] &&
+          board[0][0] !== null
         ) {
           return true;
         }
       }
       if ((row === 0 && col === 2) || (row === 2 && col === 0) || isMiddle) {
         if (
-          boardState[0][2] === boardState[1][1] &&
-          boardState[1][1] === boardState[2][0] &&
-          boardState[0][2] !== null
+          board[0][2] === board[1][1] &&
+          board[1][1] === board[2][0] &&
+          board[0][2] !== null
         ) {
           return true;
         }
@@ -90,9 +102,12 @@ export const useBoardState = () => {
     [boardState]
   );
 
-  const checkForDraw = useCallback(() => {
-    return boardState.every((row) => row.every((cell) => cell !== null));
-  }, [boardState]);
+  const checkForDraw = useCallback(
+    (board: BoardState = boardState) => {
+      return board.every((row) => row.every((cell) => cell !== null));
+    },
+    [boardState]
+  );
 
   return {
     boardState,

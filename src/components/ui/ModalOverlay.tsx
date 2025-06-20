@@ -1,6 +1,5 @@
-import React from "react";
+import React, { memo } from "react";
 import { View, ViewStyle, StyleSheet } from "react-native";
-import { Box } from "../../theme/ThemeProvider";
 
 interface ModalOverlayProps {
   children: React.ReactNode;
@@ -17,9 +16,6 @@ const styles = StyleSheet.create({
   },
 });
 
-export const ModalOverlay: React.FC<ModalOverlayProps> = ({
-  children,
-  style,
-}) => {
+export const ModalOverlay = memo<ModalOverlayProps>(({ children, style }) => {
   return <View style={[styles.overlay, style]}>{children}</View>;
-};
+});

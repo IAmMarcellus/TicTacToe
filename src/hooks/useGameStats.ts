@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Marker } from "./useBoardState";
 import { STORAGE_KEYS } from "../utils/constants";
@@ -74,10 +74,14 @@ export const useGameStats = () => {
   }, [saveStats]);
 
   // Calculate total games
-  const totalGames = stats.wins + stats.losses + stats.draws;
+  const totalGames = useMemo(() => {
+    return stats.wins + stats.losses + stats.draws;
+  }, [stats.wins, stats.losses, stats.draws]);
 
   // Calculate win percentage
-  const winPercentage = totalGames > 0 ? (stats.wins / totalGames) * 100 : 0;
+  const winPercentage = useMemo(() => {
+    return totalGames > 0 ? (stats.wins / totalGames) * 100 : 0;
+  }, [stats.wins, totalGames]);
 
   // Load stats on mount
   useEffect(() => {

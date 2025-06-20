@@ -18,7 +18,7 @@ const BORDER_WIDTH = 2;
 
 export const Square: React.FC<SquareProps> = memo(
   ({ position, onPress, resident }) => {
-    const { colors, spacing } = useTheme();
+    const { colors } = useTheme();
 
     const buttonStyle = useMemo((): ViewStyle => {
       // Determine corner radius based on position
@@ -58,7 +58,7 @@ export const Square: React.FC<SquareProps> = memo(
         shadowRadius: 2,
         elevation: 2,
       };
-    }, [position, colors, spacing]);
+    }, [position, colors]);
 
     const markerColor = useMemo(() => {
       return resident === Marker.O ? "oMarker" : "xMarker";

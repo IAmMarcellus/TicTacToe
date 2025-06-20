@@ -131,9 +131,50 @@ export const ThemedButton = memo<ThemedButtonProps>(
       };
     }, [variant, size, colors, spacing, borderRadii]);
 
+    const animatedViewStyle = useMemo(
+      () => ({ transform: [{ scale: scaleAnim }] }),
+      [scaleAnim]
+    );
+
+    const gradientStyle = useMemo(
+      () => ({
+        position: "absolute" as const,
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        borderRadius: borderRadii.xxxl,
+        alignItems: "center" as const,
+        justifyContent: "center" as const,
+        minHeight: 56,
+      }),
+      [borderRadii.xxxl]
+    );
+
+    const gradientTextStyle = useMemo(
+      () => ({
+        color: "#FFFFFF",
+        fontSize: 18,
+        fontWeight: "600" as const,
+        textShadowColor: "rgba(0, 0, 0, 0.3)",
+        textShadowOffset: { width: 0, height: 1 },
+        textShadowRadius: 2,
+      }),
+      []
+    );
+
+    const regularTextStyle = useMemo(
+      () => ({
+        color: getTextColor === "white" ? "#FFFFFF" : colors.primary,
+        fontSize: 18,
+        fontWeight: "600" as const,
+      }),
+      [getTextColor, colors.primary]
+    );
+
     if (variant === "gradient") {
       return (
-        <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+        <Animated.View style={animatedViewStyle}>
           <TouchableOpacity
             style={style}
             activeOpacity={0.8}
@@ -146,30 +187,13 @@ export const ThemedButton = memo<ThemedButtonProps>(
                 colors={getGradientColors}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  borderRadius: borderRadii.xxxl,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  minHeight: 56,
-                }}
+                style={gradientStyle}
               />
               <Text
                 variant="button"
                 color="white"
                 textAlign="center"
-                style={{
-                  color: "#FFFFFF",
-                  fontSize: 18,
-                  fontWeight: "600",
-                  textShadowColor: "rgba(0, 0, 0, 0.3)",
-                  textShadowOffset: { width: 0, height: 1 },
-                  textShadowRadius: 2,
-                }}
+                style={gradientTextStyle}
               >
                 {title}
               </Text>
@@ -180,7 +204,7 @@ export const ThemedButton = memo<ThemedButtonProps>(
     }
 
     return (
-      <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+      <Animated.View style={animatedViewStyle}>
         <TouchableOpacity
           style={style}
           activeOpacity={0.8}
@@ -193,11 +217,7 @@ export const ThemedButton = memo<ThemedButtonProps>(
               variant="button"
               color={getTextColor}
               textAlign="center"
-              style={{
-                color: getTextColor === "white" ? "#FFFFFF" : colors.primary,
-                fontSize: 18,
-                fontWeight: "600",
-              }}
+              style={regularTextStyle}
             >
               {title}
             </Text>

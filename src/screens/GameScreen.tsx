@@ -42,7 +42,7 @@ export const GameScreen = memo(({ navigation }: NavigationProps) => {
     } else {
       return "It's a Draw! 🤝";
     }
-  }, [winningState, boardState]);
+  }, [winningState]);
 
   const handlePlayAgain = useCallback(() => {
     resetGame();
@@ -54,6 +54,8 @@ export const GameScreen = memo(({ navigation }: NavigationProps) => {
     }
     return currentPlayer === Marker.X ? "Your turn" : "CPU thinking...";
   }, [winningState, currentPlayer]);
+
+  const cardStyle = useMemo(() => ({ marginBottom: 20 }), []);
 
   return (
     <Box flex={1} backgroundColor="mainBackground">
@@ -95,7 +97,7 @@ export const GameScreen = memo(({ navigation }: NavigationProps) => {
 
         {/* Game Board */}
         <Box aspectRatio={1} width="100%" marginBottom="xxxl" marginTop="xxxl">
-          <Card variant="elevated" flex={1} style={{ marginBottom: 20 }}>
+          <Card variant="elevated" flex={1} style={cardStyle}>
             <GameBoard
               boardState={boardState}
               handleSquarePress={userSquarePress}

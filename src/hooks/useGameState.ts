@@ -23,8 +23,8 @@ export const useGameState = () => {
         return;
       }
 
-      updateBoard(row, col, currentPlayer);
-      const didWin = checkForWin([row, col] as Position);
+      const newBoard = updateBoard(row, col, currentPlayer);
+      const didWin = checkForWin([row, col] as Position, newBoard);
 
       if (didWin) {
         // Player X is human, Player O is CPU
@@ -35,7 +35,7 @@ export const useGameState = () => {
       }
 
       // Check for draw
-      if (checkForDraw()) {
+      if (checkForDraw(newBoard)) {
         setWinningState("draw");
         updateStats("draw");
         return;
@@ -43,7 +43,15 @@ export const useGameState = () => {
 
       setCurrentPlayer(currentPlayer === Marker.X ? Marker.O : Marker.X);
     },
-    [boardState, currentPlayer, winningState, updateStats, checkForDraw]
+    [
+      boardState,
+      currentPlayer,
+      winningState,
+      updateBoard,
+      checkForWin,
+      checkForDraw,
+      updateStats,
+    ]
   );
 
   const resetGame = useCallback(() => {

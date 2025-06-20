@@ -1,5 +1,5 @@
 import { memo, useCallback, useMemo } from "react";
-import { ScrollView, ViewStyle, StyleSheet } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 import { Box, Text } from "../theme/ThemeProvider";
 import { NavigationProps } from "../types/navigation";
 import { useTheme, ThemeMode } from "../hooks/useTheme";
