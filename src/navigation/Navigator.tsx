@@ -52,6 +52,7 @@ export function Navigator() {
             options={{
               title: "Tic Tac Toe",
               headerShown: false,
+              animation: "slide_from_left",
             }}
           />
           <Stack.Screen
@@ -60,6 +61,7 @@ export function Navigator() {
             options={{
               title: "Game",
               headerShown: false,
+              animation: "slide_from_right",
             }}
           />
           <Stack.Screen

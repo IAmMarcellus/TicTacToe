@@ -64,6 +64,17 @@ export const Square: React.FC<SquareProps> = memo(
       return resident === Marker.O ? "oMarker" : "xMarker";
     }, [resident]);
 
+    const textStyle = useMemo(
+      () => ({
+        fontSize: 36,
+        fontWeight: "700" as const,
+        textShadowColor: colors.shadow,
+        textShadowOffset: { width: 0, height: 1 },
+        textShadowRadius: 2,
+      }),
+      [colors.shadow]
+    );
+
     const onSquarePress = useCallback(() => {
       onPress(position[0], position[1]);
     }, [onPress, position]);
@@ -82,17 +93,7 @@ export const Square: React.FC<SquareProps> = memo(
           backgroundColor="gameBoardBackground"
         >
           {!!resident && (
-            <Text
-              variant="gameMarker"
-              color={markerColor}
-              style={{
-                fontSize: 36,
-                fontWeight: "700",
-                textShadowColor: colors.shadow,
-                textShadowOffset: { width: 0, height: 1 },
-                textShadowRadius: 2,
-              }}
-            >
+            <Text variant="gameMarker" color={markerColor} style={textStyle}>
               {resident}
             </Text>
           )}

@@ -5,7 +5,6 @@ import { useGameState } from "../hooks/useGameState";
 import { memo, useCallback, useMemo } from "react";
 import { NavigationProps } from "../types/navigation";
 import { Box, Text } from "../theme/ThemeProvider";
-import { ThemedButton } from "../components/ThemedButton";
 import { Marker } from "../hooks/useBoardState";
 import { IconButton, Card } from "../components/ui";
 
@@ -17,6 +16,15 @@ export const GameScreen = memo(({ navigation }: NavigationProps) => {
     handleSquarePress,
     resetGame,
   } = useGameState();
+
+  const userSquarePress = useCallback(
+    (row: number, col: number) => {
+      if (currentPlayer === Marker.X) {
+        handleSquarePress(row, col);
+      }
+    },
+    [handleSquarePress, currentPlayer]
+  );
 
   const handleBackToHome = useCallback(() => {
     navigation.navigate("Home");
@@ -93,7 +101,7 @@ export const GameScreen = memo(({ navigation }: NavigationProps) => {
         >
           <GameBoard
             boardState={boardState}
-            handleSquarePress={handleSquarePress}
+            handleSquarePress={userSquarePress}
           />
         </Box>
 
