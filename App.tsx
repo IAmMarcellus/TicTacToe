@@ -1,13 +1,11 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, View } from "react-native";
-import GameBoard from "./src/components/GameBoard";
+import { GameScreen } from "./src/screens/GameScreen";
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <View style={styles.gameBoard}>
-        <GameBoard />
-      </View>
+      <GameScreen />
       <StatusBar style="auto" />
     </View>
   );
