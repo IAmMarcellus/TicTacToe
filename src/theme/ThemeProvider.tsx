@@ -7,6 +7,7 @@ import {
   createText,
 } from "@shopify/restyle";
 import { lightTheme, darkTheme, Theme } from "./theme";
+import { STORAGE_KEYS } from "../utils/constants";
 
 enum ThemeMode {
   LIGHT = "light",
@@ -21,8 +22,6 @@ interface ThemeContextType {
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
-
-const THEME_STORAGE_KEY = "@tictactoe_theme_mode";
 
 export const Box = createBox<Theme>();
 export const Text = createText<Theme>();
@@ -47,7 +46,9 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   useEffect(() => {
     const loadThemeMode = async () => {
       try {
-        const savedThemeMode = await AsyncStorage.getItem(THEME_STORAGE_KEY);
+        const savedThemeMode = await AsyncStorage.getItem(
+          STORAGE_KEYS.THEME_MODE
+        );
         if (
           savedThemeMode &&
           Object.values(ThemeMode).includes(savedThemeMode as ThemeMode)
@@ -67,7 +68,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   // Save theme mode to storage
   const handleSetThemeMode = async (mode: ThemeMode) => {
     try {
-      await AsyncStorage.setItem(THEME_STORAGE_KEY, mode);
+      await AsyncStorage.setItem(STORAGE_KEYS.THEME_MODE, mode);
       setThemeMode(mode);
     } catch (error) {
       console.warn("Failed to save theme mode:", error);
@@ -75,7 +76,6 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   };
 
   if (!isLoaded) {
-    // You could show a loading screen here
     return null;
   }
 

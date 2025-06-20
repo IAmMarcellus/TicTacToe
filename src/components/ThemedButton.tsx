@@ -1,5 +1,9 @@
-import React from "react";
-import { TouchableOpacity, TouchableOpacityProps } from "react-native";
+import React, { useMemo } from "react";
+import {
+  TouchableOpacity,
+  TouchableOpacityProps,
+  StyleSheet,
+} from "react-native";
 import { Box, Text } from "../theme/ThemeProvider";
 import { useTheme } from "../hooks/useTheme";
 import { ThemeColors } from "../theme/theme";
@@ -19,7 +23,7 @@ export const ThemedButton: React.FC<ThemedButtonProps> = ({
 }) => {
   const { colors, spacing, borderRadii } = useTheme();
 
-  const getVariantStyles = () => {
+  const variantStyles = useMemo(() => {
     switch (variant) {
       case "primary":
         return {
@@ -43,9 +47,9 @@ export const ThemedButton: React.FC<ThemedButtonProps> = ({
           borderWidth: 0,
         };
     }
-  };
+  }, [variant, colors.primary, colors.secondary]);
 
-  const getSizeStyles = () => {
+  const sizeStyles = useMemo(() => {
     switch (size) {
       case "small":
         return {
@@ -66,7 +70,11 @@ export const ThemedButton: React.FC<ThemedButtonProps> = ({
           borderRadius: borderRadii.xxxl,
         };
     }
-  };
+  }, [size, spacing, borderRadii]);
+
+  const buttonStyle = useMemo(() => {
+    return [variantStyles, sizeStyles, style];
+  }, [variantStyles, sizeStyles, style]);
 
   const getTextColor = (): ThemeColors => {
     if (variant === "outline") {
@@ -76,11 +84,7 @@ export const ThemedButton: React.FC<ThemedButtonProps> = ({
   };
 
   return (
-    <TouchableOpacity
-      style={[getVariantStyles(), getSizeStyles(), style]}
-      activeOpacity={0.8}
-      {...props}
-    >
+    <TouchableOpacity style={buttonStyle} activeOpacity={0.8} {...props}>
       <Text variant="button" color={getTextColor()} textAlign="center">
         {title}
       </Text>

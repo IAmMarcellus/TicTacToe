@@ -1,13 +1,26 @@
-import { memo, useCallback } from "react";
-import { TouchableOpacity } from "react-native";
+import { memo, useCallback, useMemo } from "react";
+import { ScrollView, ViewStyle } from "react-native";
 import { Box, Text } from "../theme/ThemeProvider";
-import { ThemedButton } from "../components/ThemedButton";
-import { ThemeToggle } from "../components/ThemeToggle";
 import { NavigationProps } from "../types/navigation";
 import { useTheme, ThemeMode } from "../hooks/useTheme";
+import { useGameStats } from "../hooks/useGameStats";
+import {
+  Header,
+  Card,
+  SelectionCard,
+  StatCard,
+  SummaryCard,
+  SummaryRow,
+} from "../components/ui";
+import { ThemedButton } from "../components/ThemedButton";
 
 export const SettingsScreen = memo(({ navigation }: NavigationProps) => {
   const { themeMode, setThemeMode, isDark } = useTheme();
+  const { stats, resetStats, totalGames, winPercentage } = useGameStats();
+
+  const scrollViewStyle = useMemo((): ViewStyle => {
+    return { flex: 1 };
+  }, []);
 
   const handleBackToHome = useCallback(() => {
     navigation.navigate("Home");
@@ -20,203 +33,110 @@ export const SettingsScreen = memo(({ navigation }: NavigationProps) => {
     [setThemeMode]
   );
 
+  const handleResetStats = useCallback(async () => {
+    await resetStats();
+  }, [resetStats]);
+
   return (
-    <Box flex={1} backgroundColor="mainBackground">
-      {/* Header */}
-      <Box
-        flexDirection="row"
-        alignItems="center"
-        paddingHorizontal="l"
-        paddingTop="xxxl"
-        paddingBottom="l"
-        borderBottomWidth={1}
-        borderBottomColor="border"
-      >
-        <TouchableOpacity onPress={handleBackToHome} activeOpacity={0.7}>
-          <Box
-            width={40}
-            height={40}
-            borderRadius="round"
-            justifyContent="center"
-            alignItems="center"
-          >
-            <Text fontSize={24} color="primaryText">
-              ←
-            </Text>
-          </Box>
-        </TouchableOpacity>
-        <Text variant="title" marginLeft="m">
-          Settings
-        </Text>
-      </Box>
+    <ScrollView style={scrollViewStyle}>
+      <Box flex={1} backgroundColor="mainBackground">
+        {/* Header */}
+        <Header title="Settings" leftIcon="←" onLeftPress={handleBackToHome} />
 
-      {/* Content */}
-      <Box flex={1} paddingHorizontal="l" paddingTop="xl">
-        {/* Theme Section */}
-        <Box marginBottom="xxl">
-          <Text variant="title" marginBottom="l">
-            Appearance
-          </Text>
-
-          <Box
-            backgroundColor="cardPrimaryBackground"
-            borderRadius="l"
-            padding="l"
-            marginBottom="m"
-          >
-            <Text variant="body" marginBottom="m" color="secondaryText">
-              Choose your preferred theme
+        {/* Content */}
+        <Box flex={1} paddingHorizontal="l" paddingTop="xl">
+          {/* Theme Section */}
+          <Box marginBottom="xxl">
+            <Text variant="title" marginBottom="l">
+              Appearance
             </Text>
 
-            {/* Theme Options */}
-            <Box>
-              {/* Light Theme Option */}
-              <TouchableOpacity
-                onPress={() => handleThemeChange(ThemeMode.LIGHT)}
-                activeOpacity={0.7}
-              >
-                <Box
-                  flexDirection="row"
-                  alignItems="center"
-                  paddingVertical="m"
-                  paddingHorizontal="l"
-                  borderRadius="m"
-                  backgroundColor={
-                    themeMode === ThemeMode.LIGHT
-                      ? "primary"
-                      : "cardPrimaryBackground"
-                  }
-                  opacity={themeMode === ThemeMode.LIGHT ? 0.1 : 1}
+            <Card>
+              <Text variant="body" marginBottom="m" color="secondaryText">
+                Choose your preferred theme
+              </Text>
+
+              {/* Theme Options */}
+              <Box>
+                <SelectionCard
+                  icon="☀️"
+                  title="Light"
+                  isSelected={themeMode === ThemeMode.LIGHT}
+                  onPress={() => handleThemeChange(ThemeMode.LIGHT)}
+                />
+
+                <SelectionCard
+                  icon="🌙"
+                  title="Dark"
+                  isSelected={themeMode === ThemeMode.DARK}
+                  onPress={() => handleThemeChange(ThemeMode.DARK)}
+                />
+
+                <SelectionCard
+                  icon="⚙️"
+                  title="System"
+                  isSelected={themeMode === ThemeMode.SYSTEM}
+                  onPress={() => handleThemeChange(ThemeMode.SYSTEM)}
                   marginBottom="s"
-                >
-                  <Text fontSize={20} marginRight="m">
-                    ☀️
-                  </Text>
-                  <Text variant="body" flex={1}>
-                    Light
-                  </Text>
-                  {themeMode === ThemeMode.LIGHT && (
-                    <Text fontSize={16} color="primary">
-                      ✓
-                    </Text>
-                  )}
-                </Box>
-              </TouchableOpacity>
+                />
+              </Box>
+            </Card>
+          </Box>
 
-              {/* Dark Theme Option */}
-              <TouchableOpacity
-                onPress={() => handleThemeChange(ThemeMode.DARK)}
-                activeOpacity={0.7}
+          {/* Game Statistics Section */}
+          <Box marginBottom="xxl">
+            <Text variant="title" marginBottom="l">
+              Game Statistics
+            </Text>
+
+            <Card>
+              <Box
+                flexDirection="row"
+                justifyContent="space-around"
+                marginBottom="l"
               >
-                <Box
-                  flexDirection="row"
-                  alignItems="center"
-                  paddingVertical="m"
-                  paddingHorizontal="l"
-                  borderRadius="m"
-                  backgroundColor={
-                    themeMode === ThemeMode.DARK
-                      ? "primary"
-                      : "cardPrimaryBackground"
-                  }
-                  opacity={themeMode === ThemeMode.DARK ? 0.1 : 1}
-                  marginBottom="s"
-                >
-                  <Text fontSize={20} marginRight="m">
-                    🌙
-                  </Text>
-                  <Text variant="body" flex={1}>
-                    Dark
-                  </Text>
-                  {themeMode === ThemeMode.DARK && (
-                    <Text fontSize={16} color="primary">
-                      ✓
-                    </Text>
-                  )}
-                </Box>
-              </TouchableOpacity>
+                <StatCard value={stats.wins} label="Wins" color="success" />
+                <StatCard
+                  value={stats.losses}
+                  label="Losses"
+                  color="secondary"
+                />
+                <StatCard value={stats.draws} label="Draws" color="primary" />
+              </Box>
 
-              {/* System Theme Option */}
-              <TouchableOpacity
-                onPress={() => handleThemeChange(ThemeMode.SYSTEM)}
-                activeOpacity={0.7}
-              >
-                <Box
-                  flexDirection="row"
-                  alignItems="center"
-                  paddingVertical="m"
-                  paddingHorizontal="l"
-                  borderRadius="m"
-                  backgroundColor={
-                    themeMode === ThemeMode.SYSTEM
-                      ? "primary"
-                      : "cardPrimaryBackground"
-                  }
-                  opacity={themeMode === ThemeMode.SYSTEM ? 0.1 : 1}
-                >
-                  <Text fontSize={20} marginRight="m">
-                    ⚙️
-                  </Text>
-                  <Text variant="body" flex={1}>
-                    System
-                  </Text>
-                  {themeMode === ThemeMode.SYSTEM && (
-                    <Text fontSize={16} color="primary">
-                      ✓
-                    </Text>
-                  )}
-                </Box>
-              </TouchableOpacity>
-            </Box>
+              {/* Summary */}
+              <SummaryCard>
+                <SummaryRow label="Total Games" value={totalGames} />
+                <SummaryRow
+                  label="Win Rate"
+                  value={`${winPercentage.toFixed(1)}%`}
+                  valueColor="success"
+                />
+              </SummaryCard>
+
+              {/* Reset Stats Button */}
+              <ThemedButton
+                title="Reset Statistics"
+                onPress={handleResetStats}
+                variant="outline"
+              />
+            </Card>
           </Box>
 
-          {/* Current Theme Info */}
-          <Box
-            backgroundColor="cardSecondaryBackground"
-            borderRadius="m"
-            padding="m"
-            borderWidth={1}
-            borderColor="border"
-          >
-            <Text variant="caption" color="secondaryText" marginBottom="s">
-              Current Theme
+          {/* About Section */}
+          <Box>
+            <Text variant="title" marginBottom="l">
+              About
             </Text>
-            <Text variant="body">
-              {themeMode === ThemeMode.LIGHT && "Light Mode"}
-              {themeMode === ThemeMode.DARK && "Dark Mode"}
-              {themeMode === ThemeMode.SYSTEM &&
-                `System Mode (${isDark ? "Dark" : "Light"})`}
-            </Text>
-          </Box>
-        </Box>
-
-        {/* Quick Theme Toggle */}
-        <Box marginBottom="xxl">
-          <Text variant="title" marginBottom="l">
-            Quick Toggle
-          </Text>
-          <Box alignItems="center">
-            <ThemeToggle />
-          </Box>
-        </Box>
-
-        {/* About Section */}
-        <Box>
-          <Text variant="title" marginBottom="l">
-            About
-          </Text>
-          <Box
-            backgroundColor="cardPrimaryBackground"
-            borderRadius="l"
-            padding="l"
-          >
-            <Text variant="bodySecondary" lineHeight={24}>
-              TicTacToe is a classic strategy game with modern theming support.
-              Choose your preferred appearance and enjoy the game!
-            </Text>
+            <Card>
+              <Text variant="bodySecondary" lineHeight={24}>
+                TicTacToe is a classic strategy game with modern theming
+                support. Choose your preferred appearance and enjoy the game!
+              </Text>
+            </Card>
           </Box>
         </Box>
       </Box>
-    </Box>
+    </ScrollView>
   );
 });

@@ -1,9 +1,8 @@
 import { memo, useCallback } from "react";
-import { TouchableOpacity } from "react-native";
 import { Box, Text } from "../theme/ThemeProvider";
 import { ThemedButton } from "../components/ThemedButton";
-import { ThemeToggle } from "../components/ThemeToggle";
 import { NavigationProps } from "../types/navigation";
+import { IconButton } from "../components/ui";
 
 export const HomeScreen = memo(({ navigation }: NavigationProps) => {
   const handleStartGame = useCallback(() => {
@@ -29,21 +28,12 @@ export const HomeScreen = memo(({ navigation }: NavigationProps) => {
         flexDirection="row"
         alignItems="center"
       >
-        <TouchableOpacity onPress={handleOpenSettings} activeOpacity={0.7}>
-          <Box
-            width={40}
-            height={40}
-            borderRadius="round"
-            justifyContent="center"
-            alignItems="center"
-            marginRight="m"
-          >
-            <Text fontSize={20} color="primaryText">
-              ⚙️
-            </Text>
-          </Box>
-        </TouchableOpacity>
-        <ThemeToggle />
+        <IconButton
+          icon="⚙️"
+          text="Settings"
+          onPress={handleOpenSettings}
+          size="medium"
+        />
       </Box>
 
       <Text variant="header" textAlign="center" marginBottom="l">
