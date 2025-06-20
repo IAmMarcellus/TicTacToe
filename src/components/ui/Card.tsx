@@ -24,8 +24,8 @@ export const Card: React.FC<CardProps> = ({
           borderWidth: 1,
           borderColor: "border" as const,
           shadowColor: "shadow" as const,
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.1,
+          shadowOffset: { width: 2, height: 8 },
+          shadowOpacity: 0.8,
           shadowRadius: 4,
           elevation: 2,
         };
@@ -40,8 +40,8 @@ export const Card: React.FC<CardProps> = ({
           backgroundColor: "cardSecondaryBackground" as const,
           borderWidth: 0,
           shadowColor: "shadow" as const,
-          shadowOffset: { width: 0.2, height: 8 },
-          shadowOpacity: 0.15,
+          shadowOffset: { width: 8, height: 16 },
+          shadowOpacity: 0.8,
           shadowRadius: 16,
           elevation: 8,
         };
