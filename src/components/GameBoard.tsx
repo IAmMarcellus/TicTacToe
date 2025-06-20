@@ -29,7 +29,7 @@ const GameBoard = memo(
             );
           });
         }),
-      []
+      [boardState, handleSquarePress]
     );
     const rows = useMemo(() => {
       return squares.map((row, index) => {

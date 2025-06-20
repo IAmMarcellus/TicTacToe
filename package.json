@@ -9,15 +9,23 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@react-native-community/eslint-config": "^3.2.0",
     "expo": "~53.0.12",
     "expo-status-bar": "~2.2.3",
+    "prettier": "^3.5.3",
     "react": "19.0.0",
     "react-native": "0.79.4"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
+    "@eslint/js": "^9.29.0",
     "@types/react": "~19.0.10",
-    "typescript": "~5.8.3"
+    "eslint": "^9.29.0",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-native": "^5.0.0",
+    "globals": "^16.2.0",
+    "typescript": "~5.8.3",
+    "typescript-eslint": "^8.34.1"
   },
   "private": true
 }
