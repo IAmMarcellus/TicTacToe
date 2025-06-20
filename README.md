@@ -56,10 +56,6 @@ This will open the Expo development tools. You can then:
 - Restyle (theming)
 - AsyncStorage (stats persistence)
 
-## 📱 Screenshots
-
-_Add screenshots here when available_
-
 ## 🤝 Contributing
 
 Feel free to open issues or submit pull requests for improvements.
