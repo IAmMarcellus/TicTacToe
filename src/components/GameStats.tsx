@@ -18,7 +18,7 @@ export const GameStats = memo(() => {
   }
 
   return (
-    <Box flex={1} marginBottom="l">
+    <Box flex={1} marginBottom="l" width="100%">
       <Box alignItems="center" marginBottom="s">
         <Text
           variant="title"
@@ -30,7 +30,12 @@ export const GameStats = memo(() => {
         </Text>
       </Box>
 
-      <Box flexDirection="row" justifyContent="space-around" marginBottom="l">
+      <Box
+        flexDirection="row"
+        justifyContent="space-between"
+        marginBottom="l"
+        width="100%"
+      >
         <StatCard value={stats.wins} label="Wins" color="success" />
         <StatCard value={stats.losses} label="Losses" color="secondary" />
         <StatCard value={stats.draws} label="Ties" color="primary" />

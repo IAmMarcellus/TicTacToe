@@ -76,7 +76,7 @@ export const GameScreen = memo(({ navigation }: NavigationProps) => {
         flex={1}
         justifyContent="space-around"
         alignItems="center"
-        paddingHorizontal="xxl"
+        paddingHorizontal="l"
         paddingVertical="l"
         paddingTop="xxxl"
       >

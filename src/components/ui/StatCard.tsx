@@ -52,6 +52,9 @@ export const StatCard: React.FC<StatCardProps> = ({
         textAlign="center"
         textTransform="uppercase"
         letterSpacing={0.8}
+        numberOfLines={1}
+        adjustsFontSizeToFit
+        minimumFontScale={0.8}
       >
         {label}
       </Text>
