@@ -3,17 +3,21 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { HomeScreen } from "./src/screens/HomeScreen";
 import { GameScreen } from "./src/screens/GameScreen";
+import { SettingsScreen } from "./src/screens/SettingsScreen";
+import { ThemeProvider, useTheme } from "./src/theme/ThemeProvider";
 
 const Stack = createStackNavigator();
 
-export default function App() {
+function AppContent() {
+  const { isDark } = useTheme();
+
   return (
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName="Home"
         screenOptions={{
           headerStyle: {
-            backgroundColor: "#007AFF",
+            backgroundColor: isDark ? "#1E1E1E" : "#007AFF",
           },
           headerTintColor: "#fff",
           headerTitleStyle: {
@@ -37,8 +41,24 @@ export default function App() {
             headerShown: false,
           }}
         />
+        <Stack.Screen
+          name="Settings"
+          component={SettingsScreen}
+          options={{
+            title: "Settings",
+            headerShown: false,
+          }}
+        />
       </Stack.Navigator>
-      <StatusBar style="auto" />
+      <StatusBar style={isDark ? "light" : "dark"} />
     </NavigationContainer>
+  );
+}
+
+export default function App() {
+  return (
+    <ThemeProvider>
+      <AppContent />
+    </ThemeProvider>
   );
 }

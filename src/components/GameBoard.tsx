@@ -1,5 +1,5 @@
-import { memo, useEffect, useMemo } from "react";
-import { View } from "react-native";
+import { memo, useMemo } from "react";
+import { Box } from "../theme/ThemeProvider";
 import { Square } from "./Square";
 import { HandleSquarePress } from "../hooks/useGameState";
 import { BoardState } from "../hooks/useBoardState";
@@ -32,19 +32,13 @@ export const GameBoard = memo(
     const rows = useMemo(() => {
       return squares.map((row, index) => {
         return (
-          <View
-            key={index}
-            style={{
-              flexDirection: "row",
-              flex: 1,
-            }}
-          >
+          <Box key={index} flexDirection="row" flex={1}>
             {row}
-          </View>
+          </Box>
         );
       });
     }, [squares]);
 
-    return <View style={{ flex: 1 }}>{rows}</View>;
+    return <Box flex={1}>{rows}</Box>;
   }
 );

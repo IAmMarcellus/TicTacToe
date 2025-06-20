@@ -1,8 +1,9 @@
-import { memo, FC, useMemo, useCallback } from "react";
-import { Text, TouchableHighlight, View } from "react-native";
-import { StyleSheet } from "react-native";
+import { memo, useMemo, useCallback } from "react";
+import { TouchableHighlight, ViewStyle } from "react-native";
+import { Box, Text } from "../theme/ThemeProvider";
 import { HandleSquarePress } from "../hooks/useGameState";
 import { Marker, Position } from "../hooks/useBoardState";
+import { useTheme } from "../hooks/useTheme";
 
 interface SquareProps {
   position: Position;
@@ -15,70 +16,45 @@ interface SquareProps {
 const CORNER_RADIUS = 20;
 const BORDER_WIDTH = 4;
 
-const styles = StyleSheet.create({
-  square: {
-    flex: 1,
-    borderColor: "#000000",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  horizontalBorder: {
-    borderBottomWidth: BORDER_WIDTH,
-    borderTopWidth: BORDER_WIDTH,
-  },
-  verticalBorder: {
-    borderLeftWidth: BORDER_WIDTH,
-    borderRightWidth: BORDER_WIDTH,
-  },
-  topLeftCorner: {
-    borderTopLeftRadius: CORNER_RADIUS,
-  },
-  topRightCorner: {
-    borderTopRightRadius: CORNER_RADIUS,
-  },
-  bottomLeftCorner: {
-    borderBottomLeftRadius: CORNER_RADIUS,
-  },
-  bottomRightCorner: {
-    borderBottomRightRadius: CORNER_RADIUS,
-  },
-  residentText: {
-    fontSize: 32,
-    fontWeight: "bold",
-    color: "#000000",
-  },
-});
-
-export const Square: FC<SquareProps> = memo(
+export const Square: React.FC<SquareProps> = memo(
   ({ position, onPress, resident }) => {
-    const buttonStyle = useMemo(() => {
+    const { colors } = useTheme();
+
+    const buttonStyle = useMemo((): ViewStyle => {
       // Determine corner radius based on position
       const corner = () => {
         if (position[0] === 0 && position[1] === 0) {
-          return styles.topLeftCorner;
+          return { borderTopLeftRadius: CORNER_RADIUS };
         } else if (position[0] === 0 && position[1] === 2) {
-          return styles.topRightCorner;
+          return { borderTopRightRadius: CORNER_RADIUS };
         } else if (position[0] === 2 && position[1] === 0) {
-          return styles.bottomLeftCorner;
+          return { borderBottomLeftRadius: CORNER_RADIUS };
         } else if (position[0] === 2 && position[1] === 2) {
-          return styles.bottomRightCorner;
+          return { borderBottomRightRadius: CORNER_RADIUS };
         }
+        return {};
       };
 
       return {
-        ...styles.square,
+        flex: 1,
+        borderColor: colors.gameBoardBorder,
+        justifyContent: "center" as const,
+        alignItems: "center" as const,
         ...corner(),
         // Add grid lines for the tic tac toe board based on position
-        ...(position[0] === 1 && styles.horizontalBorder),
-        ...(position[1] === 1 && styles.verticalBorder),
+        ...(position[0] === 1 && {
+          borderBottomWidth: BORDER_WIDTH,
+          borderTopWidth: BORDER_WIDTH,
+        }),
+        ...(position[1] === 1 && {
+          borderLeftWidth: BORDER_WIDTH,
+          borderRightWidth: BORDER_WIDTH,
+        }),
       };
-    }, [position]);
+    }, [position, colors.gameBoardBorder]);
 
-    const markerStyle = useMemo(() => {
-      return {
-        ...styles.residentText,
-        color: resident === Marker.O ? "red" : "blue",
-      };
+    const markerColor = useMemo(() => {
+      return resident === Marker.O ? "oMarker" : "xMarker";
     }, [resident]);
 
     const onSquarePress = useCallback(() => {
@@ -90,9 +66,15 @@ export const Square: FC<SquareProps> = memo(
         style={buttonStyle}
         onPress={onSquarePress}
         activeOpacity={0.2}
-        underlayColor="#DDDDDD"
+        underlayColor={colors.border}
       >
-        <View>{!!resident && <Text style={markerStyle}>{resident}</Text>}</View>
+        <Box>
+          {!!resident && (
+            <Text variant="gameMarker" color={markerColor}>
+              {resident}
+            </Text>
+          )}
+        </Box>
       </TouchableHighlight>
     );
   }
