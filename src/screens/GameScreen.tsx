@@ -13,6 +13,8 @@ export const GameScreen = memo(({ navigation }: NavigationProps) => {
     boardState,
     currentPlayer,
     winningState,
+    stats,
+    isLoadingStats,
     handleSquarePress,
     resetGame,
   } = useGameState();
@@ -92,21 +94,17 @@ export const GameScreen = memo(({ navigation }: NavigationProps) => {
         </Card>
 
         {/* Game Board */}
-        <Box
-          aspectRatio={1}
-          width="100%"
-          overflow="hidden"
-          marginBottom="xxxl"
-          marginTop="xxxl"
-        >
-          <GameBoard
-            boardState={boardState}
-            handleSquarePress={userSquarePress}
-          />
+        <Box aspectRatio={1} width="100%" marginBottom="xxxl" marginTop="xxxl">
+          <Card variant="elevated" flex={1} style={{ marginBottom: 20 }}>
+            <GameBoard
+              boardState={boardState}
+              handleSquarePress={userSquarePress}
+            />
+          </Card>
         </Box>
 
         {/* Game Statistics */}
-        <GameStats />
+        <GameStats stats={stats} isLoading={isLoadingStats} />
       </Box>
 
       {/* Game Result Modal */}

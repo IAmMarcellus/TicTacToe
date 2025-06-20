@@ -8,7 +8,7 @@ export type HandleSquarePress = (row: number, col: number) => void;
 export const useGameState = () => {
   const { boardState, updateBoard, resetBoard, checkForWin, checkForDraw } =
     useBoardState();
-  const { updateStats } = useGameStats();
+  const { updateStats, stats, isLoading: isLoadingStats } = useGameStats();
 
   // X goes first
   const [currentPlayer, setCurrentPlayer] = useState<Marker>(Marker.X);
@@ -64,6 +64,8 @@ export const useGameState = () => {
     boardState,
     currentPlayer,
     winningState,
+    stats,
+    isLoadingStats,
     handleSquarePress,
     resetGame,
   };
