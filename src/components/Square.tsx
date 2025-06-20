@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
 
 export const Square: FC<SquareProps> = memo(
   ({ position, onPress, resident }) => {
-    const style = useMemo(() => {
+    const buttonStyle = useMemo(() => {
       // Determine corner radius based on position
       const corner = () => {
         if (position[0] === 0 && position[1] === 0) {
@@ -74,20 +74,25 @@ export const Square: FC<SquareProps> = memo(
       };
     }, [position]);
 
+    const markerStyle = useMemo(() => {
+      return {
+        ...styles.residentText,
+        color: resident === Marker.O ? "red" : "blue",
+      };
+    }, [resident]);
+
     const onSquarePress = useCallback(() => {
       onPress(position[0], position[1]);
     }, [onPress, position]);
 
     return (
       <TouchableHighlight
-        style={style}
+        style={buttonStyle}
         onPress={onSquarePress}
         activeOpacity={0.2}
         underlayColor="#DDDDDD"
       >
-        <View>
-          {!!resident && <Text style={styles.residentText}>{resident}</Text>}
-        </View>
+        <View>{!!resident && <Text style={markerStyle}>{resident}</Text>}</View>
       </TouchableHighlight>
     );
   }
