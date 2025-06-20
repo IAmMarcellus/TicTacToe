@@ -66,7 +66,7 @@ export const GameScreen = memo(({ navigation }: NavigationProps) => {
 
       <Box
         flex={1}
-        justifyContent="space-evenly"
+        justifyContent="space-around"
         alignItems="center"
         paddingHorizontal="xxl"
         paddingVertical="l"
@@ -84,7 +84,13 @@ export const GameScreen = memo(({ navigation }: NavigationProps) => {
         </Card>
 
         {/* Game Board */}
-        <Box aspectRatio={1} width="100%" overflow="hidden" marginBottom="l">
+        <Box
+          aspectRatio={1}
+          width="100%"
+          overflow="hidden"
+          marginBottom="xxxl"
+          marginTop="xxxl"
+        >
           <GameBoard
             boardState={boardState}
             handleSquarePress={handleSquarePress}

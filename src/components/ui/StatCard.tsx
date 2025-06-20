@@ -28,11 +28,31 @@ export const StatCard: React.FC<StatCardProps> = ({
   };
 
   return (
-    <Box alignItems="center" flex={flex}>
-      <Text variant="title" fontSize={20} color={getColor()} marginBottom="xs">
+    <Box
+      alignItems="center"
+      flex={flex}
+      paddingVertical="s"
+      paddingHorizontal="xs"
+    >
+      <Text
+        variant="title"
+        fontSize={28}
+        fontWeight="700"
+        color={getColor()}
+        marginBottom="xs"
+        textAlign="center"
+      >
         {value}
       </Text>
-      <Text variant="caption" color="secondaryText">
+      <Text
+        variant="caption"
+        color="secondaryText"
+        fontSize={13}
+        fontWeight="600"
+        textAlign="center"
+        textTransform="uppercase"
+        letterSpacing={0.8}
+      >
         {label}
       </Text>
     </Box>

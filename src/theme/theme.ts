@@ -1,25 +1,43 @@
 import { createTheme } from "@shopify/restyle";
 
 const palette = {
-  // Light theme colors
+  // Modern color palette
   white: "#FFFFFF",
-  lightGray: "#F5F5F5",
-  gray: "#E0E0E0",
-  darkGray: "#666666",
-  black: "#000000",
-  blue: "#007AFF",
-  red: "#FF3B30",
-  green: "#34C759",
+  offWhite: "#FAFAFA",
+  lightGray: "#F8F9FA",
+  gray: "#E9ECEF",
+  darkGray: "#6C757D",
+  black: "#212529",
+
+  // Modern gradients and colors
+  primaryGradient: ["#667eea", "#764ba2"],
+  secondaryGradient: ["#f093fb", "#f5576c"],
+  accentGradient: ["#4facfe", "#00f2fe"],
+
+  // Modern blues
+  modernBlue: "#4F46E5",
+  lightBlue: "#818CF8",
+  darkBlue: "#3730A3",
+
+  // Modern grays
+  modernGray: "#6B7280",
+  lightModernGray: "#F3F4F6",
+  darkModernGray: "#374151",
+
+  // Accent colors
+  purple: "#8B5CF6",
+  pink: "#EC4899",
+  teal: "#14B8A6",
 
   // Dark theme colors
-  darkBackground: "#121212",
-  darkSurface: "#1E1E1E",
-  darkBorder: "#333333",
-  darkText: "#FFFFFF",
-  darkTextSecondary: "#B0B0B0",
-  darkBlue: "#0A84FF",
-  darkRed: "#FF453A",
-  darkGreen: "#30D158",
+  darkBackground: "#0F172A",
+  darkSurface: "#1E293B",
+  darkBorder: "#334155",
+  darkText: "#F8FAFC",
+  darkTextSecondary: "#CBD5E1",
+  darkThemeBlue: "#3B82F6",
+  darkThemeRed: "#EF4444",
+  darkThemeGreen: "#10B981",
 };
 
 // Shared theme properties
@@ -44,8 +62,13 @@ const baseTheme = {
   },
   textVariants: {
     header: {
-      fontSize: 32,
-      fontWeight: "bold",
+      fontSize: 36,
+      fontWeight: "700",
+      color: "primaryText",
+    },
+    headerLarge: {
+      fontSize: 42,
+      fontWeight: "800",
       color: "primaryText",
     },
     title: {
@@ -90,20 +113,20 @@ const lightTheme = createTheme({
   ...baseTheme,
   colors: {
     white: palette.white,
-    mainBackground: palette.white,
+    mainBackground: palette.offWhite,
     cardPrimaryBackground: palette.lightGray,
     cardSecondaryBackground: palette.white,
     primaryText: palette.black,
-    secondaryText: palette.darkGray,
-    primary: palette.blue,
-    secondary: palette.red,
-    success: palette.green,
+    secondaryText: palette.modernGray,
+    primary: palette.modernBlue,
+    secondary: palette.pink,
+    success: palette.teal,
     border: palette.gray,
-    shadow: "rgba(0, 0, 0, 0.1)",
+    shadow: "rgba(0, 0, 0, 0.08)",
 
     // Game specific colors
-    xMarker: palette.blue,
-    oMarker: palette.red,
+    xMarker: palette.modernBlue,
+    oMarker: palette.pink,
     gameBoardBackground: palette.white,
     gameBoardBorder: palette.black,
   },
@@ -119,15 +142,15 @@ const darkTheme = createTheme({
     cardSecondaryBackground: palette.darkBackground,
     primaryText: palette.darkText,
     secondaryText: palette.darkTextSecondary,
-    primary: palette.darkBlue,
-    secondary: palette.darkRed,
-    success: palette.darkGreen,
+    primary: palette.darkThemeBlue,
+    secondary: palette.darkThemeRed,
+    success: palette.darkThemeGreen,
     border: palette.darkBorder,
     shadow: "rgba(0, 0, 0, 0.3)",
 
     // Game specific colors
-    xMarker: palette.darkBlue,
-    oMarker: palette.darkRed,
+    xMarker: palette.darkThemeBlue,
+    oMarker: palette.darkThemeRed,
     gameBoardBackground: palette.darkSurface,
     gameBoardBorder: palette.darkText,
   },

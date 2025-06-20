@@ -2,7 +2,7 @@ import { memo, useCallback } from "react";
 import { Box, Text } from "../theme/ThemeProvider";
 import { ThemedButton } from "../components/ThemedButton";
 import { NavigationProps } from "../types/navigation";
-import { IconButton } from "../components/ui";
+import { IconButton, Card } from "../components/ui";
 
 export const HomeScreen = memo(({ navigation }: NavigationProps) => {
   const handleStartGame = useCallback(() => {
@@ -16,17 +16,20 @@ export const HomeScreen = memo(({ navigation }: NavigationProps) => {
   return (
     <Box
       flex={1}
-      justifyContent="center"
+      justifyContent="space-between"
       alignItems="center"
       paddingHorizontal="xxl"
       backgroundColor="mainBackground"
+      paddingTop="xxxl"
+      paddingBottom="xxl"
     >
+      {/* Header with Settings */}
       <Box
-        position="absolute"
-        top={50}
-        right={24}
+        width="100%"
         flexDirection="row"
+        justifyContent="flex-end"
         alignItems="center"
+        marginBottom="xl"
       >
         <IconButton
           icon="⚙️"
@@ -36,19 +39,32 @@ export const HomeScreen = memo(({ navigation }: NavigationProps) => {
         />
       </Box>
 
-      <Text variant="header" textAlign="center" marginBottom="l">
-        Tic Tac Toe
-      </Text>
-      <Text
-        variant="bodySecondary"
-        textAlign="center"
-        marginBottom="xxl"
-        lineHeight={24}
-      >
-        Challenge yourself or play against the computer in this classic game of
-        strategy and skill.
-      </Text>
-      <ThemedButton title="Start Game" onPress={handleStartGame} size="large" />
+      {/* Main Content */}
+      <Box flex={1} justifyContent="center" alignItems="center" width="100%">
+        <Card variant="elevated" padding="xxxl" margin="none">
+          <Box alignItems="center" width="100%">
+            <Text variant="headerLarge" textAlign="center" marginBottom="xxxl">
+              Tic Tac Toe
+            </Text>
+
+            <Box alignItems="center" width="100%" paddingHorizontal="l">
+              <ThemedButton
+                title="Play"
+                onPress={handleStartGame}
+                size="large"
+                variant="gradient"
+              />
+            </Box>
+          </Box>
+        </Card>
+      </Box>
+
+      {/* Footer */}
+      <Box width="100%" alignItems="center" marginTop="xl">
+        <Text variant="caption" textAlign="center" color="secondaryText">
+          Challenge the AI in this classic game
+        </Text>
+      </Box>
     </Box>
   );
 });

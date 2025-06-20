@@ -9,8 +9,8 @@ export const GameStats = memo(() => {
 
   if (isLoading) {
     return (
-      <Card>
-        <Text variant="body" color="secondaryText">
+      <Card variant="elevated" padding="l">
+        <Text variant="body" color="secondaryText" textAlign="center">
           Loading stats...
         </Text>
       </Card>
@@ -18,33 +18,23 @@ export const GameStats = memo(() => {
   }
 
   return (
-    <Card justifyContent="space-between" flex={1}>
-      <Box flexDirection="row" justifyContent="center">
-        <Text variant="title" fontSize={18}>
+    <Box flex={1} marginBottom="l">
+      <Box alignItems="center" marginBottom="s">
+        <Text
+          variant="title"
+          fontSize={20}
+          fontWeight="600"
+          color="primaryText"
+        >
           Game Statistics
         </Text>
       </Box>
 
-      <Box
-        flexDirection="row"
-        justifyContent="space-around"
-        marginBottom="m"
-        marginTop="m"
-      >
+      <Box flexDirection="row" justifyContent="space-around" marginBottom="l">
         <StatCard value={stats.wins} label="Wins" color="success" />
         <StatCard value={stats.losses} label="Losses" color="secondary" />
-        <StatCard value={stats.draws} label="Draws" color="primary" />
+        <StatCard value={stats.draws} label="Ties" color="primary" />
       </Box>
-
-      {/* Summary */}
-      <SummaryCard>
-        <SummaryRow label="Total Games" value={totalGames} />
-        <SummaryRow
-          label="Win Rate"
-          value={`${winPercentage.toFixed(1)}%`}
-          valueColor="success"
-        />
-      </SummaryCard>
-    </Card>
+    </Box>
   );
 });

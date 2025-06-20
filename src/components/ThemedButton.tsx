@@ -1,93 +1,209 @@
-import React, { useMemo } from "react";
+import React, { memo, useCallback, useMemo } from "react";
 import {
   TouchableOpacity,
   TouchableOpacityProps,
-  StyleSheet,
+  Animated,
 } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 import { Box, Text } from "../theme/ThemeProvider";
 import { useTheme } from "../hooks/useTheme";
-import { ThemeColors } from "../theme/theme";
+import { Theme } from "../theme/theme";
 
 interface ThemedButtonProps extends TouchableOpacityProps {
   title: string;
-  variant?: "primary" | "secondary" | "outline";
+  variant?: "primary" | "secondary" | "outline" | "gradient";
   size?: "small" | "medium" | "large";
 }
 
-export const ThemedButton: React.FC<ThemedButtonProps> = ({
-  title,
-  variant = "primary",
-  size = "medium",
-  style,
-  ...props
-}) => {
-  const { colors, spacing, borderRadii } = useTheme();
+export const ThemedButton = memo<ThemedButtonProps>(
+  ({
+    title,
+    variant = "primary",
+    size = "medium",
+    style,
+    onPressIn,
+    onPressOut,
+    ...props
+  }) => {
+    const { colors, spacing, borderRadii } = useTheme();
+    const scaleAnim = React.useRef(new Animated.Value(1)).current;
 
-  const variantStyles = useMemo(() => {
-    switch (variant) {
-      case "primary":
-        return {
+    const handlePressIn = useCallback(
+      (event: any) => {
+        Animated.spring(scaleAnim, {
+          toValue: 0.95,
+          useNativeDriver: true,
+        }).start();
+        onPressIn?.(event);
+      },
+      [scaleAnim, onPressIn]
+    );
+
+    const handlePressOut = useCallback(
+      (event: any) => {
+        Animated.spring(scaleAnim, {
+          toValue: 1,
+          useNativeDriver: true,
+        }).start();
+        onPressOut?.(event);
+      },
+      [scaleAnim, onPressOut]
+    );
+
+    const getTextColor = useMemo((): keyof Theme["colors"] => {
+      if (variant === "outline") {
+        return "primary";
+      }
+      return "white";
+    }, [variant]);
+
+    const getGradientColors = useMemo(() => {
+      switch (variant) {
+        case "gradient":
+          return ["#667eea", "#764ba2"] as const;
+        default:
+          return [colors.primary, colors.primary] as const;
+      }
+    }, [variant, colors.primary]);
+
+    // Get button styles from theme
+    const buttonStyles = useMemo(() => {
+      const variantStyles = {
+        primary: {
           backgroundColor: colors.primary,
           borderWidth: 0,
-        };
-      case "secondary":
-        return {
+          shadowColor: colors.primary,
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 0.3,
+          shadowRadius: 8,
+          elevation: 8,
+        },
+        secondary: {
           backgroundColor: colors.secondary,
           borderWidth: 0,
-        };
-      case "outline":
-        return {
+          shadowColor: colors.secondary,
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 0.3,
+          shadowRadius: 8,
+          elevation: 8,
+        },
+        outline: {
           backgroundColor: "transparent",
           borderWidth: 2,
           borderColor: colors.primary,
-        };
-      default:
-        return {
-          backgroundColor: colors.primary,
+          shadowColor: colors.primary,
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.1,
+          shadowRadius: 4,
+          elevation: 2,
+        },
+        gradient: {
           borderWidth: 0,
-        };
-    }
-  }, [variant, colors.primary, colors.secondary]);
+          shadowColor: colors.primary,
+          shadowOffset: { width: 0, height: 6 },
+          shadowOpacity: 0.4,
+          shadowRadius: 12,
+          elevation: 12,
+        },
+      };
 
-  const sizeStyles = useMemo(() => {
-    switch (size) {
-      case "small":
-        return {
+      const sizeStyles = {
+        small: {
           paddingHorizontal: spacing.m,
           paddingVertical: spacing.s,
-          borderRadius: borderRadii.m,
-        };
-      case "large":
-        return {
-          paddingHorizontal: spacing.xxl,
-          paddingVertical: spacing.l,
-          borderRadius: borderRadii.xxxl,
-        };
-      default:
-        return {
+          borderRadius: borderRadii.l,
+        },
+        medium: {
           paddingHorizontal: spacing.xl,
           paddingVertical: spacing.m,
           borderRadius: borderRadii.xxxl,
-        };
+        },
+        large: {
+          paddingHorizontal: spacing.xxl,
+          paddingVertical: spacing.l,
+          borderRadius: borderRadii.xxxl,
+        },
+      };
+
+      return {
+        ...variantStyles[variant],
+        ...sizeStyles[size],
+      };
+    }, [variant, size, colors, spacing, borderRadii]);
+
+    if (variant === "gradient") {
+      return (
+        <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+          <TouchableOpacity
+            style={style}
+            activeOpacity={0.8}
+            onPressIn={handlePressIn}
+            onPressOut={handlePressOut}
+            {...props}
+          >
+            <Box style={[buttonStyles, { backgroundColor: "transparent" }]}>
+              <LinearGradient
+                colors={getGradientColors}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  borderRadius: borderRadii.xxxl,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  minHeight: 56,
+                }}
+              />
+              <Text
+                variant="button"
+                color="white"
+                textAlign="center"
+                style={{
+                  color: "#FFFFFF",
+                  fontSize: 18,
+                  fontWeight: "600",
+                  textShadowColor: "rgba(0, 0, 0, 0.3)",
+                  textShadowOffset: { width: 0, height: 1 },
+                  textShadowRadius: 2,
+                }}
+              >
+                {title}
+              </Text>
+            </Box>
+          </TouchableOpacity>
+        </Animated.View>
+      );
     }
-  }, [size, spacing, borderRadii]);
 
-  const buttonStyle = useMemo(() => {
-    return [variantStyles, sizeStyles, style];
-  }, [variantStyles, sizeStyles, style]);
-
-  const getTextColor = (): ThemeColors => {
-    if (variant === "outline") {
-      return "primary";
-    }
-    return "white";
-  };
-
-  return (
-    <TouchableOpacity style={buttonStyle} activeOpacity={0.8} {...props}>
-      <Text variant="button" color={getTextColor()} textAlign="center">
-        {title}
-      </Text>
-    </TouchableOpacity>
-  );
-};
+    return (
+      <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+        <TouchableOpacity
+          style={style}
+          activeOpacity={0.8}
+          onPressIn={handlePressIn}
+          onPressOut={handlePressOut}
+          {...props}
+        >
+          <Box style={buttonStyles}>
+            <Text
+              variant="button"
+              color={getTextColor}
+              textAlign="center"
+              style={{
+                color: getTextColor === "white" ? "#FFFFFF" : colors.primary,
+                fontSize: 18,
+                fontWeight: "600",
+              }}
+            >
+              {title}
+            </Text>
+          </Box>
+        </TouchableOpacity>
+      </Animated.View>
+    );
+  }
+);
