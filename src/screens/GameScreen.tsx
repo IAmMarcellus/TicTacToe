@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native";
+import { Button, StyleSheet, View } from "react-native";
 import GameBoard from "../components/GameBoard";
 import useGameState from "../hooks/useGameState";
 import { memo } from "react";
@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
 });
 
 export const GameScreen = memo(() => {
-  const { boardState, handleSquarePress } = useGameState();
+  const { boardState, handleSquarePress, resetGame } = useGameState();
 
   return (
     <View style={styles.container}>
@@ -28,6 +28,7 @@ export const GameScreen = memo(() => {
           handleSquarePress={handleSquarePress}
         />
       </View>
+      <Button title="Reset Game" onPress={resetGame} />
     </View>
   );
 });

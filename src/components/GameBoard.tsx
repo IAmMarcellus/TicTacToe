@@ -12,9 +12,6 @@ const GameBoard = memo(
     handleSquarePress: HandleSquarePress;
   }) => {
     const places = [0, 1, 2] as const;
-    useEffect(() => {
-      console.log("boardState", boardState);
-    }, [boardState]);
     const squares = useMemo(
       () =>
         places.map((row) => {

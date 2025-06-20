@@ -50,10 +50,6 @@ const styles = StyleSheet.create({
 
 export const Square: FC<SquareProps> = memo(
   ({ position, onPress, resident }) => {
-    useEffect(() => {
-      console.log("resident", resident);
-    }, [resident]);
-
     const style = useMemo(() => {
       // Determine corner radius based on position
       const corner = () => {
