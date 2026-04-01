@@ -1,29 +1,26 @@
-import { memo, useCallback, useMemo } from "react";
+import { memo, useCallback } from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import { Box, Text } from "../theme/ThemeProvider";
 import { NavigationProps } from "../types/navigation";
 import { useTheme, ThemeMode } from "../hooks/useTheme";
-import { useGameStats } from "../hooks/useGameStats";
 import {
   Header,
   Card,
   SelectionCard,
-  StatCard,
-  SummaryCard,
-  SummaryRow,
 } from "../components/ui";
-import { ThemedButton } from "../components/ThemedButton";
 
 const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
   },
+  contentContainer: {
+    flexGrow: 1,
+    paddingBottom: 40,
+  },
 });
 
 export const SettingsScreen = memo(({ navigation }: NavigationProps) => {
-  const { themeMode, setThemeMode, isDark } = useTheme();
-  const { stats, resetStats, totalGames, winPercentage } = useGameStats();
-
+  const { themeMode, setThemeMode } = useTheme();
   const handleBackToHome = useCallback(() => {
     navigation.navigate("Home");
   }, [navigation]);
@@ -43,26 +40,14 @@ export const SettingsScreen = memo(({ navigation }: NavigationProps) => {
     [setThemeMode]
   );
 
-  const handleResetStats = useCallback(async () => {
-    await resetStats();
-  }, [resetStats]);
-
-  const contentContainerStyle = useMemo(
-    () => ({
-      paddingBottom: 40,
-      backgroundColor: isDark ? "#121212" : "#FFFFFF",
-    }),
-    [isDark]
-  );
-
   return (
-    <ScrollView
-      style={styles.scrollView}
-      contentContainerStyle={contentContainerStyle}
-      bounces={false}
-      showsVerticalScrollIndicator={false}
-    >
-      <Box flex={1} backgroundColor="mainBackground">
+    <Box flex={1} backgroundColor="mainBackground">
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.contentContainer}
+        bounces={false}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Header */}
         <Header title="Settings" leftIcon="←" onLeftPress={handleBackToHome} />
 
@@ -106,43 +91,8 @@ export const SettingsScreen = memo(({ navigation }: NavigationProps) => {
             </Card>
           </Box>
 
-          {/* Game Statistics Section */}
-          <Box marginBottom="xxl">
-            <Text variant="title" marginBottom="l">
-              Game Statistics
-            </Text>
-
-            <Card gap="l">
-              <Box flexDirection="row" justifyContent="space-around">
-                <StatCard value={stats.wins} label="Wins" color="success" />
-                <StatCard
-                  value={stats.losses}
-                  label="Losses"
-                  color="secondary"
-                />
-                <StatCard value={stats.draws} label="Draws" color="primary" />
-              </Box>
-
-              {/* Summary */}
-              <SummaryCard marginBottom="l">
-                <SummaryRow label="Total Games" value={totalGames} />
-                <SummaryRow
-                  label="Win Rate"
-                  value={`${winPercentage.toFixed(1)}%`}
-                  valueColor="success"
-                />
-              </SummaryCard>
-
-              {/* Reset Stats Button */}
-              <ThemedButton
-                title="Reset Statistics"
-                onPress={handleResetStats}
-                variant="outline"
-              />
-            </Card>
-          </Box>
         </Box>
-      </Box>
-    </ScrollView>
+      </ScrollView>
+    </Box>
   );
 });

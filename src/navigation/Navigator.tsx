@@ -6,6 +6,7 @@ import { StyleSheet } from "react-native";
 import { HomeScreen } from "../screens/HomeScreen";
 import { GameScreen } from "../screens/GameScreen";
 import { SettingsScreen } from "../screens/SettingsScreen";
+import { StatsScreen } from "../screens/StatsScreen";
 import { useTheme } from "../hooks/useTheme";
 
 const Stack = createNativeStackNavigator();
@@ -36,6 +37,12 @@ const GAME_OPTIONS = {
 const SETTINGS_OPTIONS = {
   title: "Settings",
   headerShown: false,
+};
+
+const STATS_OPTIONS = {
+  title: "Statistics",
+  headerShown: false,
+  animation: "slide_from_right" as const,
 };
 
 export function Navigator() {
@@ -72,6 +79,11 @@ export function Navigator() {
           name="Settings"
           component={SettingsScreen}
           options={SETTINGS_OPTIONS}
+        />
+        <Stack.Screen
+          name="Stats"
+          component={StatsScreen}
+          options={STATS_OPTIONS}
         />
       </Stack.Navigator>
       <StatusBar style={isDark ? "light" : "dark"} />

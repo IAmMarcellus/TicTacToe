@@ -13,6 +13,10 @@ export const HomeScreen = memo(({ navigation }: NavigationProps) => {
     navigation.navigate("Settings");
   }, [navigation]);
 
+  const handleOpenStats = useCallback(() => {
+    navigation.navigate("Stats");
+  }, [navigation]);
+
   return (
     <Box
       flex={1}
@@ -47,12 +51,18 @@ export const HomeScreen = memo(({ navigation }: NavigationProps) => {
               Tic Tac Toe
             </Text>
 
-            <Box alignItems="center" width="100%" paddingHorizontal="l">
+            <Box alignItems="center" width="100%" paddingHorizontal="l" gap="m">
               <ThemedButton
                 title="Play"
                 onPress={handleStartGame}
                 size="large"
                 variant="gradient"
+              />
+              <ThemedButton
+                title="Stats"
+                onPress={handleOpenStats}
+                size="large"
+                variant="outline"
               />
             </Box>
           </Box>

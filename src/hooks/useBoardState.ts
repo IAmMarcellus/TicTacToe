@@ -28,17 +28,17 @@ export const useBoardState = () => {
   /* -- Update Functions -- */
 
   const updateBoard: UpdateBoard = useCallback((row, col, player) => {
-    let newBoard: BoardState = [];
-    setBoardState((prev) => {
-      newBoard = prev.map((boardRow, rowIndex) =>
-        rowIndex === row
-          ? boardRow.map((cell, colIndex) => (colIndex === col ? player : cell))
-          : [...boardRow]
-      );
-      return newBoard;
-    });
+    if (boardState[row][col] !== null) {
+      return boardState;
+    }
+    const newBoard: BoardState = boardState.map((boardRow, rowIndex) =>
+      rowIndex === row
+        ? boardRow.map((cell, colIndex) => (colIndex === col ? player : cell))
+        : [...boardRow]
+    );
+    setBoardState(newBoard);
     return newBoard;
-  }, []);
+  }, [boardState]);
 
   const resetBoard = useCallback(() => {
     setBoardState(createEmptyBoard);

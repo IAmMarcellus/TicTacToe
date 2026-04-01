@@ -4,6 +4,7 @@ export type RootStackParamList = {
   Home: undefined;
   Game: undefined;
   Settings: undefined;
+  Stats: undefined;
 };
 
 export type NavigationProps = {

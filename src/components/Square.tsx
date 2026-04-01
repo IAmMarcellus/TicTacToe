@@ -80,7 +80,7 @@ export const Square: React.FC<SquareProps> = memo(
     }, [onPress, position]);
 
     return (
-      <Pressable style={buttonStyle} onPress={onSquarePress}>
+      <Pressable style={buttonStyle} onPress={onSquarePress} disabled={resident !== null}>
         <Box
           flex={1}
           justifyContent="center"
