@@ -59,18 +59,14 @@ export const useGameState = (options: GameOptions) => {
     setWinningState(null);
   }, [resetBoard]);
 
-  const { makeMove } = useCpuPlayer(boardState, handleSquarePress, options);
+  const { makeMove, cancelMove } = useCpuPlayer(boardState, handleSquarePress, options);
 
   useEffect(() => {
     if (currentPlayer === Marker.O && !winningState) {
-      const timeoutId = makeMove();
-      return () => {
-        if (timeoutId != null) {
-          clearTimeout(timeoutId);
-        }
-      };
+      makeMove();
+      return cancelMove;
     }
-  }, [currentPlayer, makeMove, winningState]);
+  }, [currentPlayer, makeMove, cancelMove, winningState]);
 
   return {
     boardState,
