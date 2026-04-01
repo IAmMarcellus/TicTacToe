@@ -10,7 +10,7 @@ export const useGameState = (options: GameOptions) => {
   const { config } = options;
   const { boardState, updateBoard, resetBoard, checkForWin, checkForDraw } =
     useBoardState(config);
-  const { updateStats, stats, isLoading: isLoadingStats } = useGameStats();
+  const { updateStats, stats, isLoading: isLoadingStats } = useGameStats(options.variant, options.difficulty);
 
   // X goes first
   const [currentPlayer, setCurrentPlayer] = useState<Marker>(Marker.X);

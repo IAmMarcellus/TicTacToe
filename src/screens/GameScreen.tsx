@@ -53,8 +53,6 @@ export const GameScreen = memo(({ navigation, route }: GameScreenProps) => {
     }
   }, [winningState]);
 
-  const fogActive = config.fogOfWar && !winningState;
-
   const headerText = useMemo(() => {
     if (winningState) {
       return "Game Over";
@@ -109,7 +107,6 @@ export const GameScreen = memo(({ navigation, route }: GameScreenProps) => {
               boardState={boardState}
               handleSquarePress={userSquarePress}
               boardSize={config.boardSize}
-              fogActive={fogActive}
             />
           </Card>
         </Box>

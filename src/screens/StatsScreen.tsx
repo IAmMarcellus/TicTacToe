@@ -2,15 +2,20 @@ import { memo, useCallback } from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import { Box, Text } from "../theme/ThemeProvider";
 import { NavigationProps } from "../types/navigation";
-import { useGameStats } from "../hooks/useGameStats";
+import { useAllStats, GameStats, EMPTY_STATS, statsKey } from "../hooks/useGameStats";
 import {
   Header,
   Card,
-  StatCard,
   SummaryCard,
   SummaryRow,
 } from "../components/ui";
 import { ThemedButton } from "../components/ThemedButton";
+import {
+  VARIANTS,
+  VARIANT_META,
+  DIFFICULTIES,
+  DIFFICULTY_META,
+} from "../types/variant";
 
 const styles = StyleSheet.create({
   scrollView: {
@@ -22,16 +27,15 @@ const styles = StyleSheet.create({
   },
 });
 
+const formatRecord = (s: GameStats): string =>
+  `${s.wins}W  ${s.losses}L  ${s.draws}D`;
+
 export const StatsScreen = memo(({ navigation }: NavigationProps) => {
-  const { stats, resetStats, totalGames, winPercentage } = useGameStats();
+  const { allStats, resetStats } = useAllStats();
 
   const handleBack = useCallback(() => {
     navigation.navigate("Home");
   }, [navigation]);
-
-  const handleResetStats = useCallback(async () => {
-    await resetStats();
-  }, [resetStats]);
 
   return (
     <Box flex={1} backgroundColor="mainBackground">
@@ -44,38 +48,60 @@ export const StatsScreen = memo(({ navigation }: NavigationProps) => {
         <Header title="Statistics" leftIcon="←" onLeftPress={handleBack} />
 
         <Box flex={1} paddingHorizontal="l" paddingTop="xl">
-          <Box marginBottom="xxl">
-            <Text variant="title" marginBottom="l">
-              Game Statistics
-            </Text>
+          <Text variant="title" marginBottom="l">
+            Game Statistics
+          </Text>
 
-            <Card gap="l">
-              <Box flexDirection="row" justifyContent="space-around">
-                <StatCard value={stats.wins} label="Wins" color="success" />
-                <StatCard
-                  value={stats.losses}
-                  label="Losses"
-                  color="secondary"
-                />
-                <StatCard value={stats.draws} label="Draws" color="primary" />
-              </Box>
+          {VARIANTS.map((variant) => {
+            const variantMeta = VARIANT_META[variant];
+            let totalWins = 0;
+            let totalLosses = 0;
+            let totalDraws = 0;
 
-              <SummaryCard marginBottom="l">
-                <SummaryRow label="Total Games" value={totalGames} />
-                <SummaryRow
-                  label="Win Rate"
-                  value={`${winPercentage.toFixed(1)}%`}
-                  valueColor="success"
-                />
-              </SummaryCard>
+            const difficultyStats = DIFFICULTIES.map((difficulty) => {
+              const key = statsKey(variant, difficulty);
+              const s = allStats[key] ?? EMPTY_STATS;
+              totalWins += s.wins;
+              totalLosses += s.losses;
+              totalDraws += s.draws;
+              return { difficulty, stats: s };
+            });
 
-              <ThemedButton
-                title="Reset Statistics"
-                onPress={handleResetStats}
-                variant="outline"
-              />
-            </Card>
-          </Box>
+            const totalGames = totalWins + totalLosses + totalDraws;
+            const winRate =
+              totalGames > 0 ? ((totalWins / totalGames) * 100).toFixed(1) : "0.0";
+
+            return (
+              <Card key={variant} gap="s" marginBottom="l">
+                <Text variant="title" fontSize={18} marginBottom="s">
+                  {variantMeta.icon} {variantMeta.label}
+                </Text>
+
+                {difficultyStats.map(({ difficulty, stats }) => (
+                  <SummaryRow
+                    key={difficulty}
+                    label={DIFFICULTY_META[difficulty].label}
+                    value={formatRecord(stats)}
+                  />
+                ))}
+
+                <SummaryCard marginTop="s">
+                  <SummaryRow label="Total Games" value={totalGames} />
+                  <SummaryRow
+                    label="Win Rate"
+                    value={`${winRate}%`}
+                    valueColor="success"
+                  />
+                </SummaryCard>
+              </Card>
+            );
+          })}
+
+          <ThemedButton
+            title="Reset Statistics"
+            onPress={resetStats}
+            variant="outline"
+          />
         </Box>
       </ScrollView>
     </Box>

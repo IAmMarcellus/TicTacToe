@@ -3,5 +3,5 @@
  */
 export enum STORAGE_KEYS {
   THEME_MODE = "@tictactoe_theme_mode",
-  GAME_STATS = "tictactoe_game_stats",
+  DETAILED_STATS = "tictactoe_detailed_stats",
 }

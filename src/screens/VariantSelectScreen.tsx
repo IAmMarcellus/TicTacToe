@@ -2,9 +2,7 @@ import { memo, useCallback } from "react";
 import { Box, Text } from "../theme/ThemeProvider";
 import { NavigationProps } from "../types/navigation";
 import { Header, Card, SelectionCard } from "../components/ui";
-import { GameVariant, VARIANT_META } from "../types/variant";
-
-const VARIANTS: GameVariant[] = ["classic", "4x4", "misere", "fogOfWar"];
+import { GameVariant, VARIANTS, VARIANT_META } from "../types/variant";
 
 export const VariantSelectScreen = memo(({ navigation }: NavigationProps) => {
   const handleBack = useCallback(() => {

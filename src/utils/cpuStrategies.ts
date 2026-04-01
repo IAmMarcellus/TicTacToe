@@ -325,10 +325,6 @@ const misereHardStrategy: CpuStrategy = (boardState, config) => {
   return pickRandom(best);
 };
 
-const placeholderStrategy: CpuStrategy = (boardState) => {
-  return findEmptyPosition(boardState);
-};
-
 // --- Strategy Map ---
 
 export const STRATEGY_MAP: Record<GameVariant, Record<Difficulty, CpuStrategy>> = {
@@ -346,10 +342,5 @@ export const STRATEGY_MAP: Record<GameVariant, Record<Difficulty, CpuStrategy>> 
     easy: misereEasyStrategy,
     hard: misereHardStrategy,
     impossible: minimaxStrategy,
-  },
-  fogOfWar: {
-    easy: placeholderStrategy,
-    hard: placeholderStrategy,
-    impossible: placeholderStrategy,
   },
 };

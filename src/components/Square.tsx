@@ -10,14 +10,13 @@ interface SquareProps {
   onPress: HandleSquarePress;
   resident: Marker | null;
   boardSize: number;
-  hidden?: boolean;
 }
 
 const CORNER_RADIUS = 16;
 const BORDER_WIDTH = 2;
 
 export const Square: React.FC<SquareProps> = memo(
-  ({ position, onPress, resident, boardSize, hidden }) => {
+  ({ position, onPress, resident, boardSize }) => {
     const { colors } = useTheme();
     const last = boardSize - 1;
 
@@ -77,8 +76,6 @@ export const Square: React.FC<SquareProps> = memo(
       onPress(position[0], position[1]);
     }, [onPress, position]);
 
-    const showMarker = resident && !hidden;
-
     return (
       <Pressable style={buttonStyle} onPress={onSquarePress} disabled={resident !== null}>
         <Box
@@ -87,7 +84,7 @@ export const Square: React.FC<SquareProps> = memo(
           alignItems="center"
           backgroundColor="gameBoardBackground"
         >
-          {showMarker ? (
+          {resident ? (
             <Text variant="gameMarker" color={markerColor} style={textStyle}>
               {resident}
             </Text>
