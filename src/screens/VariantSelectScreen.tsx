@@ -13,7 +13,7 @@ export const VariantSelectScreen = memo(({ navigation }: NavigationProps) => {
 
   const handleSelect = useCallback(
     (variant: GameVariant) => {
-      navigation.navigate("Game", { variant });
+      navigation.navigate("DifficultySelect", { variant });
     },
     [navigation]
   );

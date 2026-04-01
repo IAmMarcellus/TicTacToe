@@ -2,11 +2,12 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Marker, Position, useBoardState } from "./useBoardState";
 import { useCpuPlayer } from "./useCpuPlayer";
 import { useGameStats } from "./useGameStats";
-import { VariantConfig } from "../types/variant";
+import { GameOptions } from "../types/variant";
 
 export type HandleSquarePress = (row: number, col: number) => void;
 
-export const useGameState = (config: VariantConfig) => {
+export const useGameState = (options: GameOptions) => {
+  const { config } = options;
   const { boardState, updateBoard, resetBoard, checkForWin, checkForDraw } =
     useBoardState(config);
   const { updateStats, stats, isLoading: isLoadingStats } = useGameStats();
@@ -58,7 +59,7 @@ export const useGameState = (config: VariantConfig) => {
     setWinningState(null);
   }, [resetBoard]);
 
-  const { makeMove } = useCpuPlayer(boardState, handleSquarePress, config);
+  const { makeMove } = useCpuPlayer(boardState, handleSquarePress, options);
 
   useEffect(() => {
     if (currentPlayer === Marker.O && !winningState) {

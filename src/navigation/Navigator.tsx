@@ -8,6 +8,7 @@ import { GameScreen } from "../screens/GameScreen";
 import { SettingsScreen } from "../screens/SettingsScreen";
 import { StatsScreen } from "../screens/StatsScreen";
 import { VariantSelectScreen } from "../screens/VariantSelectScreen";
+import { DifficultySelectScreen } from "../screens/DifficultySelectScreen";
 import { useTheme } from "../hooks/useTheme";
 
 const Stack = createNativeStackNavigator();
@@ -31,6 +32,12 @@ const HOME_OPTIONS = {
 
 const VARIANT_SELECT_OPTIONS = {
   title: "Select Mode",
+  headerShown: false,
+  animation: "slide_from_right" as const,
+};
+
+const DIFFICULTY_SELECT_OPTIONS = {
+  title: "Select Difficulty",
   headerShown: false,
   animation: "slide_from_right" as const,
 };
@@ -81,6 +88,11 @@ export function Navigator() {
           name="VariantSelect"
           component={VariantSelectScreen}
           options={VARIANT_SELECT_OPTIONS}
+        />
+        <Stack.Screen
+          name="DifficultySelect"
+          component={DifficultySelectScreen}
+          options={DIFFICULTY_SELECT_OPTIONS}
         />
         <Stack.Screen
           name="Game"

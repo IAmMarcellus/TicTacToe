@@ -7,12 +7,17 @@ import { GameScreenProps } from "../types/navigation";
 import { Box, Text } from "../theme/ThemeProvider";
 import { Marker } from "../hooks/useBoardState";
 import { IconButton, Card } from "../components/ui";
-import { VARIANT_CONFIGS } from "../types/variant";
+import { VARIANT_CONFIGS, GameOptions } from "../types/variant";
 
 const CARD_STYLE = { marginBottom: 20 } as const;
 
 export const GameScreen = memo(({ navigation, route }: GameScreenProps) => {
-  const config = VARIANT_CONFIGS[route.params.variant];
+  const { variant, difficulty } = route.params;
+  const config = VARIANT_CONFIGS[variant];
+  const options = useMemo<GameOptions>(
+    () => ({ config, variant, difficulty }),
+    [config, variant, difficulty]
+  );
   const {
     boardState,
     currentPlayer,
@@ -21,7 +26,7 @@ export const GameScreen = memo(({ navigation, route }: GameScreenProps) => {
     isLoadingStats,
     handleSquarePress,
     resetGame,
-  } = useGameState(config);
+  } = useGameState(options);
 
   const userSquarePress = useCallback(
     (row: number, col: number) => {

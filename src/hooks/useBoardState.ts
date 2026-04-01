@@ -1,5 +1,6 @@
 import { useCallback, useRef, useState } from "react";
 import { VariantConfig } from "../types/variant";
+import { checkWin, isDraw } from "../utils/boardHelpers";
 
 export enum Marker {
   X = "X",
@@ -47,37 +48,16 @@ export const useBoardState = (config: VariantConfig) => {
     setBoardState(createEmptyBoard(config.boardSize));
   }, [config.boardSize]);
 
-  const checkForWin = useCallback((position: Position, board: BoardState) => {
-    const [row, col] = position;
-    const size = board.length;
-    const marker = board[row][col];
-    if (!marker) return false;
+  const checkForWin = useCallback(
+    (position: Position, board: BoardState) =>
+      checkWin(board, position, config.winLength),
+    [config.winLength]
+  );
 
-    const count = (dr: number, dc: number): number => {
-      let r = row + dr;
-      let c = col + dc;
-      let n = 0;
-      while (r >= 0 && r < size && c >= 0 && c < size && board[r][c] === marker) {
-        n++;
-        r += dr;
-        c += dc;
-      }
-      return n;
-    };
-
-    const axes: [number, number][] = [[0, 1], [1, 0], [1, 1], [1, -1]];
-    for (const [dr, dc] of axes) {
-      if (1 + count(dr, dc) + count(-dr, -dc) >= config.winLength) {
-        return true;
-      }
-    }
-
-    return false;
-  }, [config.winLength]);
-
-  const checkForDraw = useCallback((board: BoardState) => {
-    return board.every((row) => row.every((cell) => cell !== null));
-  }, []);
+  const checkForDraw = useCallback(
+    (board: BoardState) => isDraw(board),
+    []
+  );
 
   return {
     boardState,
