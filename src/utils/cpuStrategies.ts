@@ -209,10 +209,13 @@ const takeCenter: StrategyStep = (board, config) => {
 };
 const takeAny: StrategyStep = (board) => findEmptyPosition(board);
 
+const pickRandom = (cells: [number, number][]): [number, number] =>
+  cells[Math.floor(Math.random() * cells.length)];
+
 const randomStrategy: CpuStrategy = (boardState) => {
   const cells = getEmptyCells(boardState);
   if (cells.length === 0) return null;
-  return cells[Math.floor(Math.random() * cells.length)];
+  return pickRandom(cells);
 };
 
 // --- Composed strategies ---
@@ -272,6 +275,56 @@ const findBestBuildMove: StrategyStep = (board, config) => {
 
 const hard4x4Strategy = pipeline(tryWin, tryBlock, findBestBuildMove, takeCenter, takeAny);
 
+const getSafeMoves = (
+  boardState: BoardState,
+  config: VariantConfig
+): { safe: [number, number][]; all: [number, number][] } => {
+  const all = getEmptyCells(boardState);
+  const board: BoardState = boardState.map((row) => [...row]);
+  const safe: [number, number][] = [];
+
+  for (const [r, c] of all) {
+    board[r][c] = Marker.O;
+    const completes = checkWin(board, [r, c], config.winLength);
+    board[r][c] = null;
+    if (!completes) safe.push([r, c]);
+  }
+
+  return { safe, all };
+};
+
+const misereEasyStrategy: CpuStrategy = (boardState, config) => {
+  const { safe, all } = getSafeMoves(boardState, config);
+  if (all.length === 0) return null;
+  const candidates = safe.length > 0 ? safe : all;
+  return pickRandom(candidates);
+};
+
+const misereHardStrategy: CpuStrategy = (boardState, config) => {
+  const { safe, all } = getSafeMoves(boardState, config);
+  if (all.length === 0) return null;
+  if (safe.length === 0) return pickRandom(all);
+
+  const lines = getAllLines(config.boardSize, config.winLength);
+  let minCount = Infinity;
+  const scored: { cell: [number, number]; count: number }[] = [];
+
+  for (const [r, c] of safe) {
+    let oCount = 0;
+    for (const line of lines) {
+      if (!line.some(([lr, lc]) => lr === r && lc === c)) continue;
+      for (const [lr, lc] of line) {
+        if (boardState[lr][lc] === Marker.O) oCount++;
+      }
+    }
+    scored.push({ cell: [r, c], count: oCount });
+    if (oCount < minCount) minCount = oCount;
+  }
+
+  const best = scored.filter((s) => s.count === minCount).map((s) => s.cell);
+  return pickRandom(best);
+};
+
 const placeholderStrategy: CpuStrategy = (boardState) => {
   return findEmptyPosition(boardState);
 };
@@ -290,9 +343,9 @@ export const STRATEGY_MAP: Record<GameVariant, Record<Difficulty, CpuStrategy>> 
     impossible: impossible4x4Strategy,
   },
   misere: {
-    easy: placeholderStrategy,
-    hard: placeholderStrategy,
-    impossible: placeholderStrategy,
+    easy: misereEasyStrategy,
+    hard: misereHardStrategy,
+    impossible: minimaxStrategy,
   },
   fogOfWar: {
     easy: placeholderStrategy,
