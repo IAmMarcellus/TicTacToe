@@ -1,6 +1,8 @@
 import React, { memo, useMemo } from "react";
 import { Box, Text } from "../../theme/ThemeProvider";
 
+const SHADOW_OFFSET = { width: 0, height: 2 } as const;
+
 interface SummaryRowProps {
   label: string;
   value: string | number;
@@ -60,7 +62,7 @@ export const SummaryCard = memo<SummaryCardProps>(
         borderWidth={1}
         borderColor="border"
         shadowColor="shadow"
-        shadowOffset={{ width: 0, height: 2 }}
+        shadowOffset={SHADOW_OFFSET}
         shadowOpacity={0.1}
         shadowRadius={4}
         elevation={2}

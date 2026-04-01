@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useRef } from "react";
 import { BoardState, Marker } from "./useBoardState";
 import {
   findEmptyPosition,
@@ -10,6 +10,10 @@ export const useCpuPlayer = (
   boardState: BoardState,
   pressSquare: HandleSquarePress
 ) => {
+  // Use ref for pressSquare to avoid recreating makeMove when it changes
+  const pressSquareRef = useRef(pressSquare);
+  pressSquareRef.current = pressSquare;
+
   const nextPosition = useCallback(() => {
     const winningPosition = findEmptyThirdPosition(boardState, Marker.O);
     if (winningPosition) {
@@ -30,14 +34,15 @@ export const useCpuPlayer = (
     }
   }, [boardState]);
 
-  const makeMove = useCallback(() => {
+  const makeMove = useCallback((): ReturnType<typeof setTimeout> | undefined => {
     const position = nextPosition();
     if (position) {
-      setTimeout(() => {
-        pressSquare(position[0], position[1]);
+      return setTimeout(() => {
+        pressSquareRef.current(position[0], position[1]);
       }, 1000);
     }
-  }, [nextPosition, pressSquare]);
+    return undefined;
+  }, [nextPosition]);
 
   return { makeMove };
 };

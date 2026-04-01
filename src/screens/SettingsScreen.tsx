@@ -28,10 +28,18 @@ export const SettingsScreen = memo(({ navigation }: NavigationProps) => {
     navigation.navigate("Home");
   }, [navigation]);
 
-  const handleThemeChange = useCallback(
-    (mode: ThemeMode) => {
-      setThemeMode(mode);
-    },
+  const handleLightTheme = useCallback(
+    () => setThemeMode(ThemeMode.LIGHT),
+    [setThemeMode]
+  );
+
+  const handleDarkTheme = useCallback(
+    () => setThemeMode(ThemeMode.DARK),
+    [setThemeMode]
+  );
+
+  const handleSystemTheme = useCallback(
+    () => setThemeMode(ThemeMode.SYSTEM),
     [setThemeMode]
   );
 
@@ -77,21 +85,21 @@ export const SettingsScreen = memo(({ navigation }: NavigationProps) => {
                   icon="☀️"
                   title="Light"
                   isSelected={themeMode === ThemeMode.LIGHT}
-                  onPress={() => handleThemeChange(ThemeMode.LIGHT)}
+                  onPress={handleLightTheme}
                 />
 
                 <SelectionCard
                   icon="🌙"
                   title="Dark"
                   isSelected={themeMode === ThemeMode.DARK}
-                  onPress={() => handleThemeChange(ThemeMode.DARK)}
+                  onPress={handleDarkTheme}
                 />
 
                 <SelectionCard
                   icon="⚙️"
                   title="System"
                   isSelected={themeMode === ThemeMode.SYSTEM}
-                  onPress={() => handleThemeChange(ThemeMode.SYSTEM)}
+                  onPress={handleSystemTheme}
                   marginBottom="s"
                 />
               </Box>

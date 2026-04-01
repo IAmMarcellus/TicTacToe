@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useMemo } from "react";
 import { StyleSheet } from "react-native";
 import { HomeScreen } from "../screens/HomeScreen";
@@ -8,7 +8,7 @@ import { GameScreen } from "../screens/GameScreen";
 import { SettingsScreen } from "../screens/SettingsScreen";
 import { useTheme } from "../hooks/useTheme";
 
-const Stack = createStackNavigator();
+const Stack = createNativeStackNavigator();
 
 const styles = StyleSheet.create({
   headerTitleStyle: {
@@ -20,6 +20,23 @@ const styles = StyleSheet.create({
 });
 
 const HEADER_TINT_COLOR = "#fff";
+
+const HOME_OPTIONS = {
+  title: "Tic Tac Toe",
+  headerShown: false,
+  animation: "slide_from_left" as const,
+};
+
+const GAME_OPTIONS = {
+  title: "Game",
+  headerShown: false,
+  animation: "slide_from_right" as const,
+};
+
+const SETTINGS_OPTIONS = {
+  title: "Settings",
+  headerShown: false,
+};
 
 export function Navigator() {
   const { isDark } = useTheme();
@@ -44,28 +61,17 @@ export function Navigator() {
         <Stack.Screen
           name="Home"
           component={HomeScreen}
-          options={{
-            title: "Tic Tac Toe",
-            headerShown: false,
-            animation: "slide_from_left",
-          }}
+          options={HOME_OPTIONS}
         />
         <Stack.Screen
           name="Game"
           component={GameScreen}
-          options={{
-            title: "Game",
-            headerShown: false,
-            animation: "slide_from_right",
-          }}
+          options={GAME_OPTIONS}
         />
         <Stack.Screen
           name="Settings"
           component={SettingsScreen}
-          options={{
-            title: "Settings",
-            headerShown: false,
-          }}
+          options={SETTINGS_OPTIONS}
         />
       </Stack.Navigator>
       <StatusBar style={isDark ? "light" : "dark"} />

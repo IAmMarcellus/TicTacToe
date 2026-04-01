@@ -1,8 +1,8 @@
 import React, { memo } from "react";
-import { TouchableOpacity, TouchableOpacityProps } from "react-native";
+import { Pressable, PressableProps } from "react-native";
 import { Box, Text } from "../../theme/ThemeProvider";
 
-interface SelectionCardProps extends TouchableOpacityProps {
+interface SelectionCardProps extends PressableProps {
   icon?: string;
   title: string;
   isSelected?: boolean;
@@ -20,7 +20,7 @@ export const SelectionCard = memo<SelectionCardProps>(
     ...props
   }) => {
     return (
-      <TouchableOpacity onPress={onPress} activeOpacity={0.7} {...props}>
+      <Pressable onPress={onPress} {...props}>
         <Box
           flexDirection="row"
           alignItems="center"
@@ -31,21 +31,21 @@ export const SelectionCard = memo<SelectionCardProps>(
           opacity={isSelected ? 0.9 : 1}
           marginBottom={marginBottom}
         >
-          {icon && (
+          {icon ? (
             <Text fontSize={20} marginRight="m">
               {icon}
             </Text>
-          )}
+          ) : null}
           <Text variant="body" flex={1} color="primaryText">
             {title}
           </Text>
-          {isSelected && (
+          {isSelected ? (
             <Text fontSize={16} color="primaryText">
               ✓
             </Text>
-          )}
+          ) : null}
         </Box>
-      </TouchableOpacity>
+      </Pressable>
     );
   }
 );

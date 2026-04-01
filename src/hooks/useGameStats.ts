@@ -1,6 +1,5 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Marker } from "./useBoardState";
 import { STORAGE_KEYS } from "../utils/constants";
 
 export interface GameStats {
@@ -43,27 +42,29 @@ export const useGameStats = () => {
     }
   }, []);
 
-  // Update stats when game ends
+  // Update stats when game ends - uses functional setState for stability
   const updateStats = useCallback(
     (result: "win" | "loss" | "draw") => {
-      const newStats = { ...stats };
+      setStats((prev) => {
+        const newStats = { ...prev };
 
-      switch (result) {
-        case "win":
-          newStats.wins += 1;
-          break;
-        case "loss":
-          newStats.losses += 1;
-          break;
-        case "draw":
-          newStats.draws += 1;
-          break;
-      }
+        switch (result) {
+          case "win":
+            newStats.wins += 1;
+            break;
+          case "loss":
+            newStats.losses += 1;
+            break;
+          case "draw":
+            newStats.draws += 1;
+            break;
+        }
 
-      setStats(newStats);
-      saveStats(newStats);
+        saveStats(newStats);
+        return newStats;
+      });
     },
-    [stats, saveStats]
+    [saveStats]
   );
 
   // Reset stats
@@ -73,15 +74,9 @@ export const useGameStats = () => {
     await saveStats(newStats);
   }, [saveStats]);
 
-  // Calculate total games
-  const totalGames = useMemo(() => {
-    return stats.wins + stats.losses + stats.draws;
-  }, [stats.wins, stats.losses, stats.draws]);
-
-  // Calculate win percentage
-  const winPercentage = useMemo(() => {
-    return totalGames > 0 ? (stats.wins / totalGames) * 100 : 0;
-  }, [stats.wins, totalGames]);
+  // Derive directly - trivial arithmetic doesn't need useMemo
+  const totalGames = stats.wins + stats.losses + stats.draws;
+  const winPercentage = totalGames > 0 ? (stats.wins / totalGames) * 100 : 0;
 
   // Load stats on mount
   useEffect(() => {

@@ -1,4 +1,11 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { useColorScheme } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
@@ -66,27 +73,31 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   }, []);
 
   // Save theme mode to storage
-  const handleSetThemeMode = async (mode: ThemeMode) => {
+  const handleSetThemeMode = useCallback(async (mode: ThemeMode) => {
     try {
       await AsyncStorage.setItem(STORAGE_KEYS.THEME_MODE, mode);
       setThemeMode(mode);
     } catch (error) {
       console.warn("Failed to save theme mode:", error);
     }
-  };
+  }, []);
+
+  // Memoize context value to prevent unnecessary consumer re-renders
+  const contextValue = useMemo(
+    () => ({
+      themeMode,
+      setThemeMode: handleSetThemeMode,
+      isDark,
+    }),
+    [themeMode, handleSetThemeMode, isDark]
+  );
 
   if (!isLoaded) {
     return null;
   }
 
   return (
-    <ThemeContext.Provider
-      value={{
-        themeMode,
-        setThemeMode: handleSetThemeMode,
-        isDark,
-      }}
-    >
+    <ThemeContext.Provider value={contextValue}>
       <RestyleThemeProvider theme={currentTheme}>
         {children}
       </RestyleThemeProvider>

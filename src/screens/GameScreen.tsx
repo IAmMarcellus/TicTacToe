@@ -8,6 +8,8 @@ import { Box, Text } from "../theme/ThemeProvider";
 import { Marker } from "../hooks/useBoardState";
 import { IconButton, Card } from "../components/ui";
 
+const CARD_STYLE = { marginBottom: 20 } as const;
+
 export const GameScreen = memo(({ navigation }: NavigationProps) => {
   const {
     boardState,
@@ -55,7 +57,7 @@ export const GameScreen = memo(({ navigation }: NavigationProps) => {
     return currentPlayer === Marker.X ? "Your turn" : "CPU thinking...";
   }, [winningState, currentPlayer]);
 
-  const cardStyle = useMemo(() => ({ marginBottom: 20 }), []);
+  const cardStyle = CARD_STYLE;
 
   return (
     <Box flex={1} backgroundColor="mainBackground">

@@ -1,19 +1,19 @@
 import React, { memo, useCallback, useMemo } from "react";
-import {
-  TouchableOpacity,
-  TouchableOpacityProps,
-  Animated,
-} from "react-native";
+import { Pressable, PressableProps, Animated } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Box, Text } from "../theme/ThemeProvider";
 import { useTheme } from "../hooks/useTheme";
 import { Theme } from "../theme/theme";
 
-interface ThemedButtonProps extends TouchableOpacityProps {
+interface ThemedButtonProps extends PressableProps {
   title: string;
   variant?: "primary" | "secondary" | "outline" | "gradient";
   size?: "small" | "medium" | "large";
 }
+
+const TRANSPARENT_BG = { backgroundColor: "transparent" } as const;
+const GRADIENT_START = { x: 0, y: 0 } as const;
+const GRADIENT_END = { x: 1, y: 1 } as const;
 
 export const ThemedButton = memo<ThemedButtonProps>(
   ({
@@ -175,18 +175,17 @@ export const ThemedButton = memo<ThemedButtonProps>(
     if (variant === "gradient") {
       return (
         <Animated.View style={animatedViewStyle}>
-          <TouchableOpacity
+          <Pressable
             style={style}
-            activeOpacity={0.8}
             onPressIn={handlePressIn}
             onPressOut={handlePressOut}
             {...props}
           >
-            <Box style={[buttonStyles, { backgroundColor: "transparent" }]}>
+            <Box style={[buttonStyles, TRANSPARENT_BG]}>
               <LinearGradient
                 colors={getGradientColors}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
+                start={GRADIENT_START}
+                end={GRADIENT_END}
                 style={gradientStyle}
               />
               <Text
@@ -198,16 +197,15 @@ export const ThemedButton = memo<ThemedButtonProps>(
                 {title}
               </Text>
             </Box>
-          </TouchableOpacity>
+          </Pressable>
         </Animated.View>
       );
     }
 
     return (
       <Animated.View style={animatedViewStyle}>
-        <TouchableOpacity
+        <Pressable
           style={style}
-          activeOpacity={0.8}
           onPressIn={handlePressIn}
           onPressOut={handlePressOut}
           {...props}
@@ -222,7 +220,7 @@ export const ThemedButton = memo<ThemedButtonProps>(
               {title}
             </Text>
           </Box>
-        </TouchableOpacity>
+        </Pressable>
       </Animated.View>
     );
   }

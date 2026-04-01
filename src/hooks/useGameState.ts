@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Marker, Position, useBoardState } from "./useBoardState";
 import { useCpuPlayer } from "./useCpuPlayer";
 import { useGameStats } from "./useGameStats";
@@ -16,42 +16,37 @@ export const useGameState = () => {
     "win" | "loss" | "draw" | null
   >(null);
 
+  // Use refs to stabilize handleSquarePress dependencies
+  const currentPlayerRef = useRef(currentPlayer);
+  currentPlayerRef.current = currentPlayer;
+  const winningStateRef = useRef(winningState);
+  winningStateRef.current = winningState;
+
   const handleSquarePress: HandleSquarePress = useCallback(
     (row, col) => {
-      // If the square is already filled or game ended, do nothing
-      if (boardState[row][col] !== null || winningState) {
+      if (winningStateRef.current) {
         return;
       }
 
-      const newBoard = updateBoard(row, col, currentPlayer);
+      const newBoard = updateBoard(row, col, currentPlayerRef.current);
       const didWin = checkForWin([row, col] as Position, newBoard);
 
       if (didWin) {
-        // Player X is human, Player O is CPU
-        const result = currentPlayer === Marker.X ? "win" : "loss";
+        const result = currentPlayerRef.current === Marker.X ? "win" : "loss";
         setWinningState(result);
         updateStats(result);
         return;
       }
 
-      // Check for draw
       if (checkForDraw(newBoard)) {
         setWinningState("draw");
         updateStats("draw");
         return;
       }
 
-      setCurrentPlayer(currentPlayer === Marker.X ? Marker.O : Marker.X);
+      setCurrentPlayer((prev) => (prev === Marker.X ? Marker.O : Marker.X));
     },
-    [
-      boardState,
-      currentPlayer,
-      winningState,
-      updateBoard,
-      checkForWin,
-      checkForDraw,
-      updateStats,
-    ]
+    [updateBoard, checkForWin, checkForDraw, updateStats]
   );
 
   const resetGame = useCallback(() => {
@@ -64,7 +59,12 @@ export const useGameState = () => {
 
   useEffect(() => {
     if (currentPlayer === Marker.O && !winningState) {
-      makeMove();
+      const timeoutId = makeMove();
+      return () => {
+        if (timeoutId != null) {
+          clearTimeout(timeoutId);
+        }
+      };
     }
   }, [currentPlayer, makeMove, winningState]);
 

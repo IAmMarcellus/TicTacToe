@@ -4,6 +4,8 @@ import { Box, Text } from "../theme/ThemeProvider";
 import { ThemedButton } from "./ThemedButton";
 import { ModalOverlay } from "./ui";
 
+const SHADOW_OFFSET = { width: 0, height: 4 } as const;
+
 interface GameResultModalProps {
   visible: boolean;
   message: string;
@@ -30,7 +32,7 @@ export const GameResultModal = memo(
             borderWidth={1}
             borderColor="border"
             shadowColor="shadow"
-            shadowOffset={{ width: 0, height: 4 }}
+            shadowOffset={SHADOW_OFFSET}
             shadowOpacity={0.3}
             shadowRadius={8}
             elevation={10}

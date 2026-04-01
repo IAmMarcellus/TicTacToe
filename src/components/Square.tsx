@@ -1,5 +1,5 @@
 import { memo, useMemo, useCallback } from "react";
-import { TouchableHighlight, ViewStyle } from "react-native";
+import { Pressable, ViewStyle } from "react-native";
 import { Box, Text } from "../theme/ThemeProvider";
 import { HandleSquarePress } from "../hooks/useGameState";
 import { Marker, Position } from "../hooks/useBoardState";
@@ -80,25 +80,20 @@ export const Square: React.FC<SquareProps> = memo(
     }, [onPress, position]);
 
     return (
-      <TouchableHighlight
-        style={buttonStyle}
-        onPress={onSquarePress}
-        activeOpacity={0.3}
-        underlayColor={colors.border}
-      >
+      <Pressable style={buttonStyle} onPress={onSquarePress}>
         <Box
           flex={1}
           justifyContent="center"
           alignItems="center"
           backgroundColor="gameBoardBackground"
         >
-          {!!resident && (
+          {resident ? (
             <Text variant="gameMarker" color={markerColor} style={textStyle}>
               {resident}
             </Text>
-          )}
+          ) : null}
         </Box>
-      </TouchableHighlight>
+      </Pressable>
     );
   }
 );
