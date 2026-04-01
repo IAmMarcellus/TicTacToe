@@ -6,7 +6,7 @@ import { IconButton } from "../components/ui";
 
 export const HomeScreen = memo(({ navigation }: NavigationProps) => {
   const handleStartGame = useCallback(() => {
-    navigation.navigate("Game");
+    navigation.navigate("VariantSelect");
   }, [navigation]);
 
   const handleOpenSettings = useCallback(() => {
@@ -45,7 +45,7 @@ export const HomeScreen = memo(({ navigation }: NavigationProps) => {
             title="Stats"
             onPress={handleOpenStats}
             size="large"
-            variant="outline"
+            variant="gradient-outline"
           />
         </Box>
       </Box>

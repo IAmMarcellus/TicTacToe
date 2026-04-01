@@ -2,33 +2,43 @@ import { memo, useMemo } from "react";
 import { Box } from "../theme/ThemeProvider";
 import { Square } from "./Square";
 import { HandleSquarePress } from "../hooks/useGameState";
-import { BoardState } from "../hooks/useBoardState";
-
-const PLACES = [0, 1, 2] as const;
+import { BoardState, Marker } from "../hooks/useBoardState";
 
 export const GameBoard = memo(
   ({
     boardState,
     handleSquarePress,
+    boardSize,
+    fogActive,
   }: {
     boardState: BoardState;
     handleSquarePress: HandleSquarePress;
+    boardSize: number;
+    fogActive?: boolean;
   }) => {
+    const places = useMemo(
+      () => Array.from({ length: boardSize }, (_, i) => i),
+      [boardSize]
+    );
+
     const squares = useMemo(
       () =>
-        PLACES.map((row) => {
-          return PLACES.map((column) => {
+        places.map((row) => {
+          return places.map((column) => {
+            const resident = boardState[row][column];
             return (
               <Square
                 key={`${row}-${column}`}
                 position={[row, column]}
                 onPress={handleSquarePress}
-                resident={boardState[row][column]}
+                resident={resident}
+                boardSize={boardSize}
+                hidden={fogActive && resident === Marker.O}
               />
             );
           });
         }),
-      [boardState, handleSquarePress]
+      [boardState, handleSquarePress, places, boardSize, fogActive]
     );
 
     const rows = useMemo(() => {

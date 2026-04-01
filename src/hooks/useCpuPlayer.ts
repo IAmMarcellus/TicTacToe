@@ -5,16 +5,19 @@ import {
   findEmptyThirdPosition,
 } from "../utils/boardHelpers";
 import { HandleSquarePress } from "./useGameState";
+import { VariantConfig } from "../types/variant";
 
 export const useCpuPlayer = (
   boardState: BoardState,
-  pressSquare: HandleSquarePress
+  pressSquare: HandleSquarePress,
+  config: VariantConfig
 ) => {
-  // Use ref for pressSquare to avoid recreating makeMove when it changes
   const pressSquareRef = useRef(pressSquare);
   pressSquareRef.current = pressSquare;
 
   const nextPosition = useCallback(() => {
+    const center = Math.floor(config.boardSize / 2);
+
     const winningPosition = findEmptyThirdPosition(boardState, Marker.O);
     if (winningPosition) {
       return winningPosition;
@@ -23,16 +26,14 @@ export const useCpuPlayer = (
     if (blockingPosition) {
       return blockingPosition;
     }
-    const centerPostion = boardState[1][1];
-    if (centerPostion === null) {
-      return [1, 1];
+    if (boardState[center][center] === null) {
+      return [center, center];
     }
-    // If no winning or blocking position, take the first empty position
     const emptyPosition = findEmptyPosition(boardState);
     if (emptyPosition) {
       return emptyPosition;
     }
-  }, [boardState]);
+  }, [boardState, config.boardSize]);
 
   const makeMove = useCallback((): ReturnType<typeof setTimeout> | undefined => {
     const position = nextPosition();

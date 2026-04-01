@@ -2,12 +2,13 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Marker, Position, useBoardState } from "./useBoardState";
 import { useCpuPlayer } from "./useCpuPlayer";
 import { useGameStats } from "./useGameStats";
+import { VariantConfig } from "../types/variant";
 
 export type HandleSquarePress = (row: number, col: number) => void;
 
-export const useGameState = () => {
+export const useGameState = (config: VariantConfig) => {
   const { boardState, updateBoard, resetBoard, checkForWin, checkForDraw } =
-    useBoardState();
+    useBoardState(config);
   const { updateStats, stats, isLoading: isLoadingStats } = useGameStats();
 
   // X goes first
@@ -32,7 +33,9 @@ export const useGameState = () => {
       const didWin = checkForWin([row, col] as Position, newBoard);
 
       if (didWin) {
-        const result = currentPlayerRef.current === Marker.X ? "win" : "loss";
+        let result: "win" | "loss" =
+          currentPlayerRef.current === Marker.X ? "win" : "loss";
+        if (config.misere) result = result === "win" ? "loss" : "win";
         setWinningState(result);
         updateStats(result);
         return;
@@ -46,7 +49,7 @@ export const useGameState = () => {
 
       setCurrentPlayer((prev) => (prev === Marker.X ? Marker.O : Marker.X));
     },
-    [updateBoard, checkForWin, checkForDraw, updateStats]
+    [updateBoard, checkForWin, checkForDraw, updateStats, config.misere]
   );
 
   const resetGame = useCallback(() => {
@@ -55,7 +58,7 @@ export const useGameState = () => {
     setWinningState(null);
   }, [resetBoard]);
 
-  const { makeMove } = useCpuPlayer(boardState, handleSquarePress);
+  const { makeMove } = useCpuPlayer(boardState, handleSquarePress, config);
 
   useEffect(() => {
     if (currentPlayer === Marker.O && !winningState) {

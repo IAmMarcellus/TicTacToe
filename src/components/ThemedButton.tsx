@@ -7,13 +7,19 @@ import { Theme } from "../theme/theme";
 
 interface ThemedButtonProps extends PressableProps {
   title: string;
-  variant?: "primary" | "secondary" | "outline" | "gradient";
+  variant?: "primary" | "secondary" | "outline" | "gradient" | "gradient-outline";
   size?: "small" | "medium" | "large";
 }
 
 const TRANSPARENT_BG = { backgroundColor: "transparent" } as const;
 const GRADIENT_START = { x: 0, y: 0 } as const;
 const GRADIENT_END = { x: 1, y: 1 } as const;
+const GRADIENT_COLORS = ["#667eea", "#764ba2"] as const;
+const GRADIENT_OUTLINE_TEXT_STYLE = {
+  color: GRADIENT_COLORS[0],
+  fontSize: 18,
+  fontWeight: "600" as const,
+};
 
 export const ThemedButton = memo<ThemedButtonProps>(
   ({
@@ -60,7 +66,8 @@ export const ThemedButton = memo<ThemedButtonProps>(
     const getGradientColors = useMemo(() => {
       switch (variant) {
         case "gradient":
-          return ["#667eea", "#764ba2"] as const;
+        case "gradient-outline":
+          return GRADIENT_COLORS;
         default:
           return [colors.primary, colors.primary] as const;
       }
@@ -104,6 +111,9 @@ export const ThemedButton = memo<ThemedButtonProps>(
           shadowOpacity: 0.4,
           shadowRadius: 12,
           elevation: 12,
+        },
+        "gradient-outline": {
+          borderWidth: 0,
         },
       };
 
@@ -171,6 +181,57 @@ export const ThemedButton = memo<ThemedButtonProps>(
       }),
       [getTextColor, colors.primary]
     );
+
+    const gradientOutlineBorderStyle = useMemo(
+      () => ({
+        borderRadius: borderRadii.xxxl,
+        padding: 2,
+      }),
+      [borderRadii.xxxl]
+    );
+
+    const gradientOutlineInnerStyle = useMemo(
+      () => ({
+        backgroundColor: colors.mainBackground,
+        borderRadius: borderRadii.xxxl - 2,
+        paddingHorizontal: buttonStyles.paddingHorizontal,
+        paddingVertical: buttonStyles.paddingVertical,
+        alignItems: "center" as const,
+        justifyContent: "center" as const,
+        minHeight: 52,
+      }),
+      [colors.mainBackground, borderRadii.xxxl, buttonStyles.paddingHorizontal, buttonStyles.paddingVertical]
+    );
+
+    if (variant === "gradient-outline") {
+      return (
+        <Animated.View style={animatedViewStyle}>
+          <Pressable
+            style={style}
+            onPressIn={handlePressIn}
+            onPressOut={handlePressOut}
+            {...props}
+          >
+            <LinearGradient
+              colors={getGradientColors}
+              start={GRADIENT_START}
+              end={GRADIENT_END}
+              style={gradientOutlineBorderStyle}
+            >
+              <Box style={gradientOutlineInnerStyle}>
+                <Text
+                  variant="button"
+                  textAlign="center"
+                  style={GRADIENT_OUTLINE_TEXT_STYLE}
+                >
+                  {title}
+                </Text>
+              </Box>
+            </LinearGradient>
+          </Pressable>
+        </Animated.View>
+      );
+    }
 
     if (variant === "gradient") {
       return (

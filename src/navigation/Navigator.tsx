@@ -7,6 +7,7 @@ import { HomeScreen } from "../screens/HomeScreen";
 import { GameScreen } from "../screens/GameScreen";
 import { SettingsScreen } from "../screens/SettingsScreen";
 import { StatsScreen } from "../screens/StatsScreen";
+import { VariantSelectScreen } from "../screens/VariantSelectScreen";
 import { useTheme } from "../hooks/useTheme";
 
 const Stack = createNativeStackNavigator();
@@ -26,6 +27,12 @@ const HOME_OPTIONS = {
   title: "Tic Tac Toe",
   headerShown: false,
   animation: "slide_from_left" as const,
+};
+
+const VARIANT_SELECT_OPTIONS = {
+  title: "Select Mode",
+  headerShown: false,
+  animation: "slide_from_right" as const,
 };
 
 const GAME_OPTIONS = {
@@ -69,6 +76,11 @@ export function Navigator() {
           name="Home"
           component={HomeScreen}
           options={HOME_OPTIONS}
+        />
+        <Stack.Screen
+          name="VariantSelect"
+          component={VariantSelectScreen}
+          options={VARIANT_SELECT_OPTIONS}
         />
         <Stack.Screen
           name="Game"

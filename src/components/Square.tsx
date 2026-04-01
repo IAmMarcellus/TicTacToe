@@ -9,27 +9,27 @@ interface SquareProps {
   position: Position;
   onPress: HandleSquarePress;
   resident: Marker | null;
+  boardSize: number;
+  hidden?: boolean;
 }
-// If the first number is a 1, then add borders on the sides
-// If the second number is a 1, then add borders on the top and bottom
 
 const CORNER_RADIUS = 16;
 const BORDER_WIDTH = 2;
 
 export const Square: React.FC<SquareProps> = memo(
-  ({ position, onPress, resident }) => {
+  ({ position, onPress, resident, boardSize, hidden }) => {
     const { colors } = useTheme();
+    const last = boardSize - 1;
 
     const buttonStyle = useMemo((): ViewStyle => {
-      // Determine corner radius based on position
       const corner = () => {
         if (position[0] === 0 && position[1] === 0) {
           return { borderTopLeftRadius: CORNER_RADIUS };
-        } else if (position[0] === 0 && position[1] === 2) {
+        } else if (position[0] === 0 && position[1] === last) {
           return { borderTopRightRadius: CORNER_RADIUS };
-        } else if (position[0] === 2 && position[1] === 0) {
+        } else if (position[0] === last && position[1] === 0) {
           return { borderBottomLeftRadius: CORNER_RADIUS };
-        } else if (position[0] === 2 && position[1] === 2) {
+        } else if (position[0] === last && position[1] === last) {
           return { borderBottomRightRadius: CORNER_RADIUS };
         }
         return {};
@@ -42,23 +42,21 @@ export const Square: React.FC<SquareProps> = memo(
         justifyContent: "center" as const,
         alignItems: "center" as const,
         ...corner(),
-        // Add grid lines for the tic tac toe board based on position
-        ...(position[0] === 1 && {
+        ...(position[0] > 0 && position[0] < last && {
           borderBottomWidth: BORDER_WIDTH,
           borderTopWidth: BORDER_WIDTH,
         }),
-        ...(position[1] === 1 && {
+        ...(position[1] > 0 && position[1] < last && {
           borderLeftWidth: BORDER_WIDTH,
           borderRightWidth: BORDER_WIDTH,
         }),
-        // Add subtle shadow for depth
         shadowColor: colors.shadow,
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.1,
         shadowRadius: 2,
         elevation: 2,
       };
-    }, [position, colors]);
+    }, [position, colors, last]);
 
     const markerColor = useMemo(() => {
       return resident === Marker.O ? "oMarker" : "xMarker";
@@ -66,18 +64,20 @@ export const Square: React.FC<SquareProps> = memo(
 
     const textStyle = useMemo(
       () => ({
-        fontSize: 36,
+        fontSize: boardSize > 3 ? 28 : 36,
         fontWeight: "700" as const,
         textShadowColor: colors.shadow,
         textShadowOffset: { width: 0, height: 1 },
         textShadowRadius: 2,
       }),
-      [colors.shadow]
+      [colors.shadow, boardSize]
     );
 
     const onSquarePress = useCallback(() => {
       onPress(position[0], position[1]);
     }, [onPress, position]);
+
+    const showMarker = resident && !hidden;
 
     return (
       <Pressable style={buttonStyle} onPress={onSquarePress} disabled={resident !== null}>
@@ -87,7 +87,7 @@ export const Square: React.FC<SquareProps> = memo(
           alignItems="center"
           backgroundColor="gameBoardBackground"
         >
-          {resident ? (
+          {showMarker ? (
             <Text variant="gameMarker" color={markerColor} style={textStyle}>
               {resident}
             </Text>

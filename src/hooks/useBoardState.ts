@@ -1,12 +1,12 @@
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
+import { VariantConfig } from "../types/variant";
 
 export enum Marker {
   X = "X",
   O = "O",
 }
 
-export type PositionNumber = 0 | 1 | 2;
-export type Position = [PositionNumber, PositionNumber];
+export type Position = [number, number];
 
 export type SquareState = Marker | null;
 export type BoardState = SquareState[][];
@@ -17,78 +17,63 @@ export type UpdateBoard = (
   player: Marker
 ) => BoardState;
 
-const createEmptyBoard = (): BoardState =>
-  Array(3)
+const createEmptyBoard = (size: number): BoardState =>
+  Array(size)
     .fill(null)
-    .map(() => Array(3).fill(null));
+    .map(() => Array(size).fill(null));
 
-export const useBoardState = () => {
-  const [boardState, setBoardState] = useState<BoardState>(createEmptyBoard);
-
-  /* -- Update Functions -- */
+export const useBoardState = (config: VariantConfig) => {
+  const [boardState, setBoardState] = useState<BoardState>(() =>
+    createEmptyBoard(config.boardSize)
+  );
+  const boardRef = useRef(boardState);
+  boardRef.current = boardState;
 
   const updateBoard: UpdateBoard = useCallback((row, col, player) => {
-    if (boardState[row][col] !== null) {
-      return boardState;
+    const current = boardRef.current;
+    if (current[row][col] !== null) {
+      return current;
     }
-    const newBoard: BoardState = boardState.map((boardRow, rowIndex) =>
+    const newBoard: BoardState = current.map((boardRow, rowIndex) =>
       rowIndex === row
         ? boardRow.map((cell, colIndex) => (colIndex === col ? player : cell))
-        : [...boardRow]
+        : boardRow
     );
     setBoardState(newBoard);
     return newBoard;
-  }, [boardState]);
-
-  const resetBoard = useCallback(() => {
-    setBoardState(createEmptyBoard);
   }, []);
 
-  /* -- Read Functions -- */
+  const resetBoard = useCallback(() => {
+    setBoardState(createEmptyBoard(config.boardSize));
+  }, [config.boardSize]);
 
   const checkForWin = useCallback((position: Position, board: BoardState) => {
     const [row, col] = position;
-    //Check row
-    if (
-      board[row][0] === board[row][1] &&
-      board[row][1] === board[row][2] &&
-      board[row][0] !== null
-    ) {
-      return true;
-    }
+    const size = board.length;
+    const marker = board[row][col];
+    if (!marker) return false;
 
-    // Check column
-    if (
-      board[0][col] === board[1][col] &&
-      board[1][col] === board[2][col] &&
-      board[0][col] !== null
-    ) {
-      return true;
-    }
-
-    // Check both diagonals if corner or middle position
-    const isMiddle = row === 1 && col === 1;
-    if ((row === 0 && col === 0) || (row === 2 && col === 2) || isMiddle) {
-      if (
-        board[0][0] === board[1][1] &&
-        board[1][1] === board[2][2] &&
-        board[0][0] !== null
-      ) {
-        return true;
+    const count = (dr: number, dc: number): number => {
+      let r = row + dr;
+      let c = col + dc;
+      let n = 0;
+      while (r >= 0 && r < size && c >= 0 && c < size && board[r][c] === marker) {
+        n++;
+        r += dr;
+        c += dc;
       }
-    }
-    if ((row === 0 && col === 2) || (row === 2 && col === 0) || isMiddle) {
-      if (
-        board[0][2] === board[1][1] &&
-        board[1][1] === board[2][0] &&
-        board[0][2] !== null
-      ) {
+      return n;
+    };
+
+    const axes: [number, number][] = [[0, 1], [1, 0], [1, 1], [1, -1]];
+    for (const [dr, dc] of axes) {
+      if (1 + count(dr, dc) + count(-dr, -dc) >= config.winLength) {
         return true;
       }
     }
 
     return false;
-  }, []);
+  }, [config.winLength]);
 
   const checkForDraw = useCallback((board: BoardState) => {
     return board.every((row) => row.every((cell) => cell !== null));

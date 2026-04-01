@@ -3,14 +3,16 @@ import { GameStats } from "../components/GameStats";
 import { GameResultModal } from "../components/GameResultModal";
 import { useGameState } from "../hooks/useGameState";
 import { memo, useCallback, useMemo } from "react";
-import { NavigationProps } from "../types/navigation";
+import { GameScreenProps } from "../types/navigation";
 import { Box, Text } from "../theme/ThemeProvider";
 import { Marker } from "../hooks/useBoardState";
 import { IconButton, Card } from "../components/ui";
+import { VARIANT_CONFIGS } from "../types/variant";
 
 const CARD_STYLE = { marginBottom: 20 } as const;
 
-export const GameScreen = memo(({ navigation }: NavigationProps) => {
+export const GameScreen = memo(({ navigation, route }: GameScreenProps) => {
+  const config = VARIANT_CONFIGS[route.params.variant];
   const {
     boardState,
     currentPlayer,
@@ -19,7 +21,7 @@ export const GameScreen = memo(({ navigation }: NavigationProps) => {
     isLoadingStats,
     handleSquarePress,
     resetGame,
-  } = useGameState();
+  } = useGameState(config);
 
   const userSquarePress = useCallback(
     (row: number, col: number) => {
@@ -46,9 +48,7 @@ export const GameScreen = memo(({ navigation }: NavigationProps) => {
     }
   }, [winningState]);
 
-  const handlePlayAgain = useCallback(() => {
-    resetGame();
-  }, [resetGame]);
+  const fogActive = config.fogOfWar && !winningState;
 
   const headerText = useMemo(() => {
     if (winningState) {
@@ -103,6 +103,8 @@ export const GameScreen = memo(({ navigation }: NavigationProps) => {
             <GameBoard
               boardState={boardState}
               handleSquarePress={userSquarePress}
+              boardSize={config.boardSize}
+              fogActive={fogActive}
             />
           </Card>
         </Box>
@@ -115,7 +117,7 @@ export const GameScreen = memo(({ navigation }: NavigationProps) => {
       <GameResultModal
         visible={!!winningState}
         message={gameResultMessage}
-        onPlayAgain={handlePlayAgain}
+        onPlayAgain={resetGame}
       />
     </Box>
   );

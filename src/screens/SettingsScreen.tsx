@@ -48,12 +48,9 @@ export const SettingsScreen = memo(({ navigation }: NavigationProps) => {
         bounces={false}
         showsVerticalScrollIndicator={false}
       >
-        {/* Header */}
         <Header title="Settings" leftIcon="←" onLeftPress={handleBackToHome} />
 
-        {/* Content */}
         <Box flex={1} paddingHorizontal="l" paddingTop="xl">
-          {/* Theme Section */}
           <Box marginBottom="xxl">
             <Text variant="title" marginBottom="l">
               Appearance
@@ -64,7 +61,6 @@ export const SettingsScreen = memo(({ navigation }: NavigationProps) => {
                 Choose your preferred theme
               </Text>
 
-              {/* Theme Options */}
               <Box>
                 <SelectionCard
                   icon="☀️"
