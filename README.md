@@ -38,7 +38,7 @@ npm install
 Start the development server:
 
 ```bash
-npm start
+npx expo start
 ```
 
 This will open the Expo development tools. You can then:
