@@ -7,6 +7,7 @@ import { GameScreenProps } from "../types/navigation";
 import { Box, Text } from "../theme/ThemeProvider";
 import { Marker } from "../hooks/useBoardState";
 import { IconButton, Card } from "../components/ui";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import { VARIANT_CONFIGS, GameOptions } from "../types/variant";
 
@@ -65,31 +66,28 @@ export const GameScreen = memo(({ navigation, route }: GameScreenProps) => {
 
   return (
     <Box flex={1} backgroundColor="mainBackground">
-      <Box
-        position="absolute"
-        top={0}
-        flexDirection="row"
-        alignItems="center"
-        paddingHorizontal="l"
-        paddingTop="xxxl"
-        paddingBottom="l"
-      >
-        <IconButton
-          icon="←"
-          onPress={handleBackToHome}
-          size="medium"
-          variant="filled"
-        />
-      </Box>
+      <SafeAreaView style={{ flex: 1 }}>
+        <Box
+          flexDirection="row"
+          alignItems="center"
+          paddingHorizontal="l"
+          paddingBottom="l"
+        >
+          <IconButton
+            icon="←"
+            onPress={handleBackToHome}
+            size="medium"
+            variant="filled"
+          />
+        </Box>
 
-      <Box
-        flex={1}
-        justifyContent="space-around"
-        alignItems="center"
-        paddingHorizontal="l"
-        paddingVertical="l"
-        paddingTop="xxxl"
-      >
+        <Box
+          flex={1}
+          justifyContent="space-around"
+          alignItems="center"
+          paddingHorizontal="l"
+          paddingVertical="l"
+        >
         <LinearGradient
           colors={["#667eea", "#764ba2"]}
           start={{ x: 0, y: 0 }}
@@ -120,6 +118,7 @@ export const GameScreen = memo(({ navigation, route }: GameScreenProps) => {
         {/* Game Statistics */}
         <GameStats stats={stats} isLoading={isLoadingStats} />
       </Box>
+      </SafeAreaView>
 
       {/* Game Result Modal */}
       <GameResultModal
