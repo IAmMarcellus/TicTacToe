@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
 export const SettingsScreen = memo(({ navigation }: NavigationProps) => {
   const { themeMode, setThemeMode } = useTheme();
   const handleBackToHome = useCallback(() => {
-    navigation.navigate("Home");
+    navigation.goBack();
   }, [navigation]);
 
   const handleLightTheme = useCallback(

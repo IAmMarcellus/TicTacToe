@@ -1,12 +1,13 @@
 import { memo, useCallback } from "react";
 import { Box, Text } from "../theme/ThemeProvider";
 import { NavigationProps } from "../types/navigation";
-import { Header, Card, SelectionCard } from "../components/ui";
+import { IconButton } from "../components/ui";
+import { ThemedButton } from "../components/ThemedButton";
 import { GameVariant, VARIANTS, VARIANT_META } from "../types/variant";
 
 export const VariantSelectScreen = memo(({ navigation }: NavigationProps) => {
   const handleBack = useCallback(() => {
-    navigation.navigate("Home");
+    navigation.goBack();
   }, [navigation]);
 
   const handleSelect = useCallback(
@@ -18,26 +19,43 @@ export const VariantSelectScreen = memo(({ navigation }: NavigationProps) => {
 
   return (
     <Box flex={1} backgroundColor="mainBackground">
-      <Header title="Select Mode" leftIcon="←" onLeftPress={handleBack} />
+      <Box
+        position="absolute"
+        top={0}
+        flexDirection="row"
+        alignItems="center"
+        paddingHorizontal="l"
+        paddingTop="xxxl"
+        paddingBottom="l"
+      >
+        <IconButton
+          icon="←"
+          onPress={handleBack}
+          size="medium"
+          variant="filled"
+        />
+      </Box>
 
-      <Box flex={1} paddingHorizontal="l" paddingTop="xl">
-        <Text variant="title" marginBottom="l">
+      <Box flex={1} paddingHorizontal="l" paddingTop="xxxl">
+        <Box height={40} />
+        <Text variant="title" marginBottom="l" textAlign="center">
           Game Modes
         </Text>
 
-        <Card>
+        <Box gap="m">
           {VARIANTS.map((variant) => {
             const meta = VARIANT_META[variant];
             return (
-              <SelectionCard
+              <ThemedButton
                 key={variant}
-                icon={meta.icon}
                 title={meta.label}
                 onPress={() => handleSelect(variant)}
+                size="large"
+                variant="gradient-outline"
               />
             );
           })}
-        </Card>
+        </Box>
       </Box>
     </Box>
   );

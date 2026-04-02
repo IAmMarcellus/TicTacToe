@@ -14,7 +14,6 @@ export type GameOptions = {
 
 export type VariantMeta = {
   label: string;
-  icon: string;
 };
 
 export const VARIANT_CONFIGS: Record<GameVariant, VariantConfig> = {
@@ -27,21 +26,21 @@ export type Difficulty = "easy" | "hard" | "impossible";
 
 export type DifficultyMeta = {
   label: string;
-  icon: string;
+  color: string;
 };
 
 export const DIFFICULTIES: Difficulty[] = ["easy", "hard", "impossible"];
 
 export const DIFFICULTY_META: Record<Difficulty, DifficultyMeta> = {
-  easy: { label: "Easy", icon: "😊" },
-  hard: { label: "Hard", icon: "🔥" },
-  impossible: { label: "Impossible", icon: "💀" },
+  easy: { label: "Easy", color: "#4CAF50" },
+  hard: { label: "Hard", color: "#FFA726" },
+  impossible: { label: "Impossible", color: "#EF5350" },
 };
 
 export const VARIANTS: GameVariant[] = ["classic", "4x4", "misere"];
 
 export const VARIANT_META: Record<GameVariant, VariantMeta> = {
-  classic: { label: "Classic", icon: "🎮" },
-  "4x4": { label: "4x4", icon: "🔲" },
-  misere: { label: "Misère", icon: "🔄" },
+  classic: { label: "Classic" },
+  "4x4": { label: "4x4" },
+  misere: { label: "Misère (reverse)" },
 };

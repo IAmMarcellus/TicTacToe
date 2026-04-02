@@ -34,7 +34,7 @@ export const StatsScreen = memo(({ navigation }: NavigationProps) => {
   const { allStats, resetStats } = useAllStats();
 
   const handleBack = useCallback(() => {
-    navigation.navigate("Home");
+    navigation.goBack();
   }, [navigation]);
 
   return (
@@ -74,7 +74,7 @@ export const StatsScreen = memo(({ navigation }: NavigationProps) => {
             return (
               <Card key={variant} gap="s" marginBottom="l">
                 <Text variant="title" fontSize={18} marginBottom="s">
-                  {variantMeta.icon} {variantMeta.label}
+                  {variantMeta.label}
                 </Text>
 
                 {difficultyStats.map(({ difficulty, stats }) => (

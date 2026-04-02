@@ -1,16 +1,16 @@
 import { memo, useCallback } from "react";
 import { Box, Text } from "../theme/ThemeProvider";
 import { DifficultySelectScreenProps } from "../types/navigation";
-import { Header, Card, SelectionCard } from "../components/ui";
-import { Difficulty, DIFFICULTIES, DIFFICULTY_META, VARIANT_META } from "../types/variant";
+import { IconButton } from "../components/ui";
+import { ThemedButton } from "../components/ThemedButton";
+import { Difficulty, DIFFICULTIES, DIFFICULTY_META } from "../types/variant";
 
 export const DifficultySelectScreen = memo(
   ({ navigation, route }: DifficultySelectScreenProps) => {
     const { variant } = route.params;
-    const variantMeta = VARIANT_META[variant];
 
     const handleBack = useCallback(() => {
-      navigation.navigate("VariantSelect");
+      navigation.goBack();
     }, [navigation]);
 
     const handleSelect = useCallback(
@@ -22,30 +22,44 @@ export const DifficultySelectScreen = memo(
 
     return (
       <Box flex={1} backgroundColor="mainBackground">
-        <Header
-          title={variantMeta.label}
-          leftIcon="←"
-          onLeftPress={handleBack}
-        />
+        <Box
+          position="absolute"
+          top={0}
+          flexDirection="row"
+          alignItems="center"
+          paddingHorizontal="l"
+          paddingTop="xxxl"
+          paddingBottom="l"
+        >
+          <IconButton
+            icon="←"
+            onPress={handleBack}
+            size="medium"
+            variant="filled"
+          />
+        </Box>
 
-        <Box flex={1} paddingHorizontal="l" paddingTop="xl">
-          <Text variant="title" marginBottom="l">
+        <Box flex={1} paddingHorizontal="l" paddingTop="xxxl">
+          <Box height={40} />
+          <Text variant="title" marginBottom="l" textAlign="center">
             Select Difficulty
           </Text>
 
-          <Card>
+          <Box gap="m">
             {DIFFICULTIES.map((difficulty) => {
               const meta = DIFFICULTY_META[difficulty];
               return (
-                <SelectionCard
+                <ThemedButton
                   key={difficulty}
-                  icon={meta.icon}
                   title={meta.label}
                   onPress={() => handleSelect(difficulty)}
+                  size="large"
+                  variant="gradient-outline"
+                  textColor={meta.color}
                 />
               );
             })}
-          </Card>
+          </Box>
         </Box>
       </Box>
     );

@@ -7,6 +7,7 @@ import { GameScreenProps } from "../types/navigation";
 import { Box, Text } from "../theme/ThemeProvider";
 import { Marker } from "../hooks/useBoardState";
 import { IconButton, Card } from "../components/ui";
+import { LinearGradient } from "expo-linear-gradient";
 import { VARIANT_CONFIGS, GameOptions } from "../types/variant";
 
 const CARD_STYLE = { marginBottom: 20 } as const;
@@ -38,7 +39,7 @@ export const GameScreen = memo(({ navigation, route }: GameScreenProps) => {
   );
 
   const handleBackToHome = useCallback(() => {
-    navigation.navigate("Home");
+    navigation.goBack();
   }, [navigation]);
 
   const gameResultMessage = useMemo(() => {
@@ -89,16 +90,21 @@ export const GameScreen = memo(({ navigation, route }: GameScreenProps) => {
         paddingVertical="l"
         paddingTop="xxxl"
       >
-        <Card>
+        <LinearGradient
+          colors={["#667eea", "#764ba2"]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={{ borderRadius: 16, paddingVertical: 12, paddingHorizontal: 24 }}
+        >
           <Text
             variant="title"
             fontSize={18}
-            color="primaryText"
+            color="white"
             textAlign="center"
           >
             {headerText}
           </Text>
-        </Card>
+        </LinearGradient>
 
         {/* Game Board */}
         <Box aspectRatio={1} width="100%" marginBottom="xxxl" marginTop="xxxl">

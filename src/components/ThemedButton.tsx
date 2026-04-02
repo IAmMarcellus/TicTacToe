@@ -9,6 +9,7 @@ interface ThemedButtonProps extends PressableProps {
   title: string;
   variant?: "primary" | "secondary" | "outline" | "gradient" | "gradient-outline";
   size?: "small" | "medium" | "large";
+  textColor?: string;
 }
 
 const TRANSPARENT_BG = { backgroundColor: "transparent" } as const;
@@ -16,7 +17,7 @@ const GRADIENT_START = { x: 0, y: 0 } as const;
 const GRADIENT_END = { x: 1, y: 1 } as const;
 const GRADIENT_COLORS = ["#667eea", "#764ba2"] as const;
 const GRADIENT_OUTLINE_TEXT_STYLE = {
-  color: GRADIENT_COLORS[0],
+  color: "#FFFFFF",
   fontSize: 18,
   fontWeight: "600" as const,
 };
@@ -26,6 +27,7 @@ export const ThemedButton = memo<ThemedButtonProps>(
     title,
     variant = "primary",
     size = "medium",
+    textColor,
     style,
     onPressIn,
     onPressOut,
@@ -222,7 +224,7 @@ export const ThemedButton = memo<ThemedButtonProps>(
                 <Text
                   variant="button"
                   textAlign="center"
-                  style={GRADIENT_OUTLINE_TEXT_STYLE}
+                  style={textColor ? { ...GRADIENT_OUTLINE_TEXT_STYLE, color: textColor } : GRADIENT_OUTLINE_TEXT_STYLE}
                 >
                   {title}
                 </Text>

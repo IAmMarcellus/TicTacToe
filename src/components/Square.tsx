@@ -1,5 +1,10 @@
-import { memo, useMemo, useCallback } from "react";
+import { memo, useMemo, useCallback, useEffect } from "react";
 import { Pressable, ViewStyle } from "react-native";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+} from "react-native-reanimated";
 import { Box, Text } from "../theme/ThemeProvider";
 import { HandleSquarePress } from "../hooks/useGameState";
 import { Marker, Position } from "../hooks/useBoardState";
@@ -14,11 +19,26 @@ interface SquareProps {
 
 const CORNER_RADIUS = 16;
 const BORDER_WIDTH = 2;
+const SPRING_CONFIG = { damping: 30, stiffness: 300 };
 
 export const Square: React.FC<SquareProps> = memo(
   ({ position, onPress, resident, boardSize }) => {
     const { colors } = useTheme();
     const last = boardSize - 1;
+    const scale = useSharedValue(resident ? 1 : 0);
+
+    useEffect(() => {
+      if (resident) {
+        scale.value = withSpring(1, SPRING_CONFIG);
+      } else {
+        scale.value = 0;
+      }
+    }, [resident, scale]);
+
+    const animatedStyle = useAnimatedStyle(() => ({
+      transform: [{ scale: scale.value }],
+      opacity: scale.value,
+    }));
 
     const buttonStyle = useMemo((): ViewStyle => {
       const corner = () => {
@@ -85,9 +105,11 @@ export const Square: React.FC<SquareProps> = memo(
           backgroundColor="gameBoardBackground"
         >
           {resident ? (
-            <Text variant="gameMarker" color={markerColor} style={textStyle}>
-              {resident}
-            </Text>
+            <Animated.View style={animatedStyle}>
+              <Text variant="gameMarker" color={markerColor} style={textStyle}>
+                {resident}
+              </Text>
+            </Animated.View>
           ) : null}
         </Box>
       </Pressable>
