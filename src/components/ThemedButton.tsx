@@ -15,9 +15,8 @@ interface ThemedButtonProps extends PressableProps {
 const TRANSPARENT_BG = { backgroundColor: "transparent" } as const;
 const GRADIENT_START = { x: 0, y: 0 } as const;
 const GRADIENT_END = { x: 1, y: 1 } as const;
-const GRADIENT_COLORS = ["#667eea", "#764ba2"] as const;
-const GRADIENT_OUTLINE_TEXT_STYLE = {
-  color: "#FFFFFF",
+export const GRADIENT_COLORS = ["#667eea", "#764ba2"] as const;
+const GRADIENT_OUTLINE_TEXT_BASE = {
   fontSize: 18,
   fontWeight: "600" as const,
 };
@@ -33,7 +32,7 @@ export const ThemedButton = memo<ThemedButtonProps>(
     onPressOut,
     ...props
   }) => {
-    const { colors, spacing, borderRadii } = useTheme();
+    const { colors, spacing, borderRadii, isDark } = useTheme();
     const scaleAnim = React.useRef(new Animated.Value(1)).current;
 
     const handlePressIn = useCallback(
@@ -184,6 +183,14 @@ export const ThemedButton = memo<ThemedButtonProps>(
       [getTextColor, colors.primary]
     );
 
+    const gradientOutlineTextStyle = useMemo(
+      () => ({
+        ...GRADIENT_OUTLINE_TEXT_BASE,
+        color: textColor ?? (isDark ? "#FFFFFF" : "#1a1a1a"),
+      }),
+      [textColor, isDark]
+    );
+
     const gradientOutlineBorderStyle = useMemo(
       () => ({
         borderRadius: borderRadii.xxxl,
@@ -224,7 +231,7 @@ export const ThemedButton = memo<ThemedButtonProps>(
                 <Text
                   variant="button"
                   textAlign="center"
-                  style={textColor ? { ...GRADIENT_OUTLINE_TEXT_STYLE, color: textColor } : GRADIENT_OUTLINE_TEXT_STYLE}
+                  style={gradientOutlineTextStyle}
                 >
                   {title}
                 </Text>

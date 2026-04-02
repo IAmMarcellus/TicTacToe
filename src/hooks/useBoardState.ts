@@ -54,10 +54,7 @@ export const useBoardState = (config: VariantConfig) => {
     [config.winLength]
   );
 
-  const checkForDraw = useCallback(
-    (board: BoardState) => isDraw(board),
-    []
-  );
+  const checkForDraw = isDraw;
 
   return {
     boardState,

@@ -1,17 +1,14 @@
-import { memo, useMemo, useCallback, useEffect } from "react";
+import { memo, useMemo, useCallback } from "react";
 import { Pressable, ViewStyle } from "react-native";
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withSpring,
-} from "react-native-reanimated";
+import Animated, { ZoomIn } from "react-native-reanimated";
 import { Box, Text } from "../theme/ThemeProvider";
 import { HandleSquarePress } from "../hooks/useGameState";
-import { Marker, Position } from "../hooks/useBoardState";
+import { Marker } from "../hooks/useBoardState";
 import { useTheme } from "../hooks/useTheme";
 
 interface SquareProps {
-  position: Position;
+  row: number;
+  col: number;
   onPress: HandleSquarePress;
   resident: Marker | null;
   boardSize: number;
@@ -19,36 +16,22 @@ interface SquareProps {
 
 const CORNER_RADIUS = 16;
 const BORDER_WIDTH = 2;
-const SPRING_CONFIG = { damping: 30, stiffness: 300 };
+const markerEntering = ZoomIn.springify().damping(30).stiffness(300);
 
 export const Square: React.FC<SquareProps> = memo(
-  ({ position, onPress, resident, boardSize }) => {
+  ({ row, col, onPress, resident, boardSize }) => {
     const { colors } = useTheme();
     const last = boardSize - 1;
-    const scale = useSharedValue(resident ? 1 : 0);
-
-    useEffect(() => {
-      if (resident) {
-        scale.value = withSpring(1, SPRING_CONFIG);
-      } else {
-        scale.value = 0;
-      }
-    }, [resident, scale]);
-
-    const animatedStyle = useAnimatedStyle(() => ({
-      transform: [{ scale: scale.value }],
-      opacity: scale.value,
-    }));
 
     const buttonStyle = useMemo((): ViewStyle => {
       const corner = () => {
-        if (position[0] === 0 && position[1] === 0) {
+        if (row === 0 && col === 0) {
           return { borderTopLeftRadius: CORNER_RADIUS };
-        } else if (position[0] === 0 && position[1] === last) {
+        } else if (row === 0 && col === last) {
           return { borderTopRightRadius: CORNER_RADIUS };
-        } else if (position[0] === last && position[1] === 0) {
+        } else if (row === last && col === 0) {
           return { borderBottomLeftRadius: CORNER_RADIUS };
-        } else if (position[0] === last && position[1] === last) {
+        } else if (row === last && col === last) {
           return { borderBottomRightRadius: CORNER_RADIUS };
         }
         return {};
@@ -61,11 +44,11 @@ export const Square: React.FC<SquareProps> = memo(
         justifyContent: "center" as const,
         alignItems: "center" as const,
         ...corner(),
-        ...(position[0] > 0 && position[0] < last && {
+        ...(row > 0 && row < last && {
           borderBottomWidth: BORDER_WIDTH,
           borderTopWidth: BORDER_WIDTH,
         }),
-        ...(position[1] > 0 && position[1] < last && {
+        ...(col > 0 && col < last && {
           borderLeftWidth: BORDER_WIDTH,
           borderRightWidth: BORDER_WIDTH,
         }),
@@ -75,7 +58,7 @@ export const Square: React.FC<SquareProps> = memo(
         shadowRadius: 2,
         elevation: 2,
       };
-    }, [position, colors, last]);
+    }, [row, col, colors, last]);
 
     const markerColor = useMemo(() => {
       return resident === Marker.O ? "oMarker" : "xMarker";
@@ -84,6 +67,7 @@ export const Square: React.FC<SquareProps> = memo(
     const textStyle = useMemo(
       () => ({
         fontSize: boardSize > 3 ? 28 : 36,
+        fontFamily: "Chalkduster",
         fontWeight: "700" as const,
         textShadowColor: colors.shadow,
         textShadowOffset: { width: 0, height: 1 },
@@ -93,8 +77,8 @@ export const Square: React.FC<SquareProps> = memo(
     );
 
     const onSquarePress = useCallback(() => {
-      onPress(position[0], position[1]);
-    }, [onPress, position]);
+      onPress(row, col);
+    }, [onPress, row, col]);
 
     return (
       <Pressable style={buttonStyle} onPress={onSquarePress} disabled={resident !== null}>
@@ -105,7 +89,7 @@ export const Square: React.FC<SquareProps> = memo(
           backgroundColor="gameBoardBackground"
         >
           {resident ? (
-            <Animated.View style={animatedStyle}>
+            <Animated.View entering={markerEntering}>
               <Text variant="gameMarker" color={markerColor} style={textStyle}>
                 {resident}
               </Text>

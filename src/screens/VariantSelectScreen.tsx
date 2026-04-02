@@ -4,7 +4,10 @@ import { NavigationProps } from "../types/navigation";
 import { IconButton } from "../components/ui";
 import { ThemedButton } from "../components/ThemedButton";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { StyleSheet } from "react-native";
 import { GameVariant, VARIANTS, VARIANT_META } from "../types/variant";
+
+const styles = StyleSheet.create({ flex: { flex: 1 } });
 
 export const VariantSelectScreen = memo(({ navigation }: NavigationProps) => {
   const handleBack = useCallback(() => {
@@ -19,8 +22,8 @@ export const VariantSelectScreen = memo(({ navigation }: NavigationProps) => {
   );
 
   return (
-    <Box flex={1} backgroundColor="mainBackground">
-      <SafeAreaView style={{ flex: 1 }}>
+    <Box flex={1}>
+      <SafeAreaView style={styles.flex}>
         <Box
           flexDirection="row"
           alignItems="center"

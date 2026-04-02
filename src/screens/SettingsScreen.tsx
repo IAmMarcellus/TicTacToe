@@ -41,7 +41,7 @@ export const SettingsScreen = memo(({ navigation }: NavigationProps) => {
   );
 
   return (
-    <Box flex={1} backgroundColor="mainBackground">
+    <Box flex={1}>
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.contentContainer}

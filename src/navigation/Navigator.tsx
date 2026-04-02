@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useMemo } from "react";
 import { StyleSheet } from "react-native";
@@ -10,8 +10,9 @@ import { StatsScreen } from "../screens/StatsScreen";
 import { VariantSelectScreen } from "../screens/VariantSelectScreen";
 import { DifficultySelectScreen } from "../screens/DifficultySelectScreen";
 import { useTheme } from "../hooks/useTheme";
+import { RootStackParamList } from "../types/navigation";
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const styles = StyleSheet.create({
   headerTitleStyle: {
@@ -73,11 +74,20 @@ export function Navigator() {
       headerStyle,
       headerTintColor: HEADER_TINT_COLOR,
       headerTitleStyle: styles.headerTitleStyle,
+      contentStyle: { backgroundColor: "transparent" },
     };
   }, [headerStyle]);
 
+  const navTheme = useMemo(() => ({
+    ...(isDark ? DarkTheme : DefaultTheme),
+    colors: {
+      ...(isDark ? DarkTheme : DefaultTheme).colors,
+      background: "transparent",
+    },
+  }), [isDark]);
+
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={navTheme}>
       <Stack.Navigator initialRouteName="Home" screenOptions={screenOptions}>
         <Stack.Screen
           name="Home"

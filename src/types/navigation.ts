@@ -1,4 +1,4 @@
-import { StackNavigationProp } from "@react-navigation/stack";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RouteProp } from "@react-navigation/native";
 import { GameVariant, Difficulty } from "./variant";
 
@@ -12,15 +12,15 @@ export type RootStackParamList = {
 };
 
 export type NavigationProps = {
-  navigation: StackNavigationProp<RootStackParamList>;
+  navigation: NativeStackNavigationProp<RootStackParamList>;
 };
 
 export type DifficultySelectScreenProps = {
-  navigation: StackNavigationProp<RootStackParamList, "DifficultySelect">;
+  navigation: NativeStackNavigationProp<RootStackParamList, "DifficultySelect">;
   route: RouteProp<RootStackParamList, "DifficultySelect">;
 };
 
 export type GameScreenProps = {
-  navigation: StackNavigationProp<RootStackParamList, "Game">;
+  navigation: NativeStackNavigationProp<RootStackParamList, "Game">;
   route: RouteProp<RootStackParamList, "Game">;
 };

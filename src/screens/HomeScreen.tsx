@@ -18,7 +18,7 @@ export const HomeScreen = memo(({ navigation }: NavigationProps) => {
   }, [navigation]);
 
   return (
-    <Box flex={1} backgroundColor="mainBackground">
+    <Box flex={1}>
       {/* Title + Buttons - full screen space-evenly */}
       <Box
         position="absolute"

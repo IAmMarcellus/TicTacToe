@@ -26,7 +26,8 @@ export const GameBoard = memo(
             return (
               <Square
                 key={`${row}-${column}`}
-                position={[row, column]}
+                row={row}
+                col={column}
                 onPress={handleSquarePress}
                 resident={boardState[row][column]}
                 boardSize={boardSize}

@@ -38,7 +38,7 @@ export const StatsScreen = memo(({ navigation }: NavigationProps) => {
   }, [navigation]);
 
   return (
-    <Box flex={1} backgroundColor="mainBackground">
+    <Box flex={1}>
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.contentContainer}

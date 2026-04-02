@@ -4,7 +4,10 @@ import { DifficultySelectScreenProps } from "../types/navigation";
 import { IconButton } from "../components/ui";
 import { ThemedButton } from "../components/ThemedButton";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { StyleSheet } from "react-native";
 import { Difficulty, DIFFICULTIES, DIFFICULTY_META } from "../types/variant";
+
+const styles = StyleSheet.create({ flex: { flex: 1 } });
 
 export const DifficultySelectScreen = memo(
   ({ navigation, route }: DifficultySelectScreenProps) => {
@@ -22,8 +25,8 @@ export const DifficultySelectScreen = memo(
     );
 
     return (
-      <Box flex={1} backgroundColor="mainBackground">
-        <SafeAreaView style={{ flex: 1 }}>
+      <Box flex={1}>
+        <SafeAreaView style={styles.flex}>
           <Box
             flexDirection="row"
             alignItems="center"

@@ -8,10 +8,16 @@ import { Box, Text } from "../theme/ThemeProvider";
 import { Marker } from "../hooks/useBoardState";
 import { IconButton, Card } from "../components/ui";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { StyleSheet } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import { GRADIENT_COLORS } from "../components/ThemedButton";
 import { VARIANT_CONFIGS, GameOptions } from "../types/variant";
 
 const CARD_STYLE = { marginBottom: 20 } as const;
+const styles = StyleSheet.create({ flex: { flex: 1 } });
+const HEADER_GRADIENT_STYLE = { borderRadius: 16, paddingVertical: 12, paddingHorizontal: 24 } as const;
+const GRADIENT_START = { x: 0, y: 0 } as const;
+const GRADIENT_END = { x: 1, y: 1 } as const;
 
 export const GameScreen = memo(({ navigation, route }: GameScreenProps) => {
   const { variant, difficulty } = route.params;
@@ -65,8 +71,8 @@ export const GameScreen = memo(({ navigation, route }: GameScreenProps) => {
   const cardStyle = CARD_STYLE;
 
   return (
-    <Box flex={1} backgroundColor="mainBackground">
-      <SafeAreaView style={{ flex: 1 }}>
+    <Box flex={1}>
+      <SafeAreaView style={styles.flex}>
         <Box
           flexDirection="row"
           alignItems="center"
@@ -89,10 +95,10 @@ export const GameScreen = memo(({ navigation, route }: GameScreenProps) => {
           paddingVertical="l"
         >
         <LinearGradient
-          colors={["#667eea", "#764ba2"]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={{ borderRadius: 16, paddingVertical: 12, paddingHorizontal: 24 }}
+          colors={GRADIENT_COLORS}
+          start={GRADIENT_START}
+          end={GRADIENT_END}
+          style={HEADER_GRADIENT_STYLE}
         >
           <Text
             variant="title"
@@ -115,7 +121,6 @@ export const GameScreen = memo(({ navigation, route }: GameScreenProps) => {
           </Card>
         </Box>
 
-        {/* Game Statistics */}
         <GameStats stats={stats} isLoading={isLoadingStats} />
       </Box>
       </SafeAreaView>
